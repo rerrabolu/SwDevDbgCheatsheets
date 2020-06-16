@@ -1,0 +1,14 @@
+Gdb Debugging Source Path Override:
+
+At the gdb prompt one can add the directory that has the files using the
+command directory. For example lets say you want to step through code located
+in file fool.c in folder Fool-1/Fool-2/Fool-3.
+
+Do the following.
+
+(gdb) directory <path of the folder that has fool.c>
+(gdb) break fool.c:lineNumber or function name
+
+When you run the gdb it will pick up the file automatically. One can use the entire
+file tree to jump into, as long as the program is built with debug option. 
+

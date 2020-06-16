@@ -1,0 +1,15 @@
+Check Name & Location of Core Dumps:
+
+  Run "cat /proc/sys/kernel/core_pattern"
+  If you don't like the name and location you can configure
+  Run "sysctl -w kernel.core_pattern=/tmp/core_%e_%p"
+
+Test Core Dump Generation"Run
+  "sleep 100 &"Run
+  "killall -SIGSEGV sleep"
+
+Enable resources for core dump file. In Bash it is, "ulimit -c unlimited".
+One can choose a size if unlimited is not possible e.g. 128M for 128 Megabytes
+  
+  
+  

@@ -1,0 +1,9 @@
+Capture Backtrace of All Running Threads:
+
+// Enable loggin
+(gdb) set logging on
+// Instruct Gdb to dump backtrace of all threads
+(gdb) thread apply all bt
+// Disable loggin
+(gdb) set logging off
+

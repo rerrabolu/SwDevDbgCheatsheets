@@ -1,0 +1,6 @@
+Initialize GDB with default options
+
+  Put your commands in .gdbinit
+  You may put the .gdbinit file into your $HOME or current directory.
+  The latter overrides the settings in the global $HOME/.gdbinit file.
+  Alternatively one can create a file with gdb commands and use it to initialize - source <path-to-gdb-init-file>

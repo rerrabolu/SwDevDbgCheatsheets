@@ -1,0 +1,8 @@
+
+Save Breakpoints of a Debug Session:
+
+// Save current breakpoints
+(gdb) save breakpoints <somefilename.txt>
+// Restore saved breakpoints
+(gdb) source  <somefilename.txt>
+

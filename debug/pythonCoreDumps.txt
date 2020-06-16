@@ -1,0 +1,4 @@
+Debugging a Python Child Process Core Dump:
+
+  Configure system to capture core dumps
+  Run gdb python <core-dump-filename>

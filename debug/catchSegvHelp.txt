@@ -1,0 +1,10 @@
+Collect Segmentation Fault Info:
+
+  Run the program via catchsegv and it will generate the stacktrace nicely
+  
+  Used to debug segmentation faults in programs. The output is the content
+  of registers, plus a backtrace. Basically you call your program and its
+  arguments as the arguments to catchsegv.
+
+  e.g. catchsegv  rbt -s x -d y
+  

@@ -1,0 +1,18 @@
+Log Gdb Session
+
+https://sourceware.org/gdb/onlinedocs/gdb/Logging-Output.html  
+
+// Specify height of stack trace
+set height N - N = 3,4 or 5, etc
+set height 0 - means print all methods
+// Enable loggin on
+set logging on
+// Specify log file name
+set logging file my_god_object.log
+// Specify policy if you want to overwrite the log file
+set logging overwrite [on|off]
+// Specify policy if you want to redirect only to log file
+set logging redirect [on|off]
+// Query current logging policy
+show logging
+

@@ -1,0 +1,5 @@
+Generate a Core Dump for a Hung Process:
+
+  Run "gcore <pid>" from bash. If gcore is not available on your system
+  then urn  "kill -ABRT <pid>"
+  

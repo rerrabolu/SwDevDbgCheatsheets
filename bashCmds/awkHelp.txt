@@ -1,0 +1,9 @@
+AWK Cmdline Help
+
+// Print First field
+awk '{print $1}' employee.txt
+// Print Last field
+awk '{print $NF}' employee.txt
+// Print First and Last fields
+awk '{print $1,$NF}' employee.txt
+

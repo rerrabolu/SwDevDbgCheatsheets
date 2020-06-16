@@ -1,0 +1,17 @@
+
+Getting Unmangled Name of Symbol:
+
+Use of LD_DEBUG is described here - http://www.bnikolic.co.uk/blog/linux-ld-debug.html
+
+Many times we encounter situations where the name of a symbol is reported as not found.
+
+An example is given below:./BinarySearch: symbol lookup error:
+  ...../lib/libhsa-runtime-tools64.so.1: undefined symbol: _ZTVN4core6SignalE
+
+In such situations we would like to find its original name or one before it was demangled.
+To do that use the tool c++filt
+
+The man page on this is given here - https://linux.die.net/man/1/c++filt
+
+Running c++filt on the above mangled symbol show it to be the vtable of core::Signal class.
+

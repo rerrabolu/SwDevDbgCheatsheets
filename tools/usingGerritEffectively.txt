@@ -1,0 +1,22 @@
+
+
+Using Gerrit Diff Effectivey:
+
+Assume you have multiple patches - say 5
+
+The base is always the unmodified version
+
+When the URL ends with change list ID then it is a diff of the latest patch with the base
+  Review URL - http...../<changeListId>
+  e.g. http://....../36232351/
+
+To do a diff between two patches simply specify the diff as follows:
+  In this example I am doing a diff between patch version 3 and 4
+  Review URL - http...../<changeListId>/<baseVersion>..<versionToCompar>
+  e.g. http://....../36232351/3..4
+  http://URL/#/c/hsa/ec/hsa-runtime/+/371755/1..2 
+
+To compare two versions of one file from a patch do something like following
+  Review URL - http...../<changeListId>/<file-path-name>
+  e.g. http://....../36232351/rocm_bandwidth_test.hpp
+

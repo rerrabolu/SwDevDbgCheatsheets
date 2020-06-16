@@ -1,0 +1,4 @@
+Interpreting Segmentation Fault Messages:
+
+  https://utcc.utoronto.ca/~cks/space/blog/linux/KernelSegfaultMessageMeaning
+  https://stackoverflow.com/questions/2549214/interpreting-segfault-messages  

@@ -1,0 +1,23 @@
+Using 'sed' to process a file:
+
+  https://www.gnu.org/software/sed/manual/sed.html
+  sed treats multiple input files as one long stream
+  To process a file for multiple patterns, simply run
+  sed again using Pipe
+  
+  # Launch syntax
+  sed SCRIPT INPUTFILE
+
+  # Place script in a file
+  sed -f <file-with-sed-script> <input-stream> > <output-stream>
+  
+  # Substitute one string with another
+  sed 's/hello/world/' <input-stream> > <output-stream>
+  
+  # Delete lines with given expression
+  sed '/<pattern-1>/d' > <output-stream>
+
+  # Substitute or Delete multiple patterns
+  sed <first-pattern-script> < <input-stream> |
+    sed <second-pattern-script> |
+    sed <third-pattern-script> > <output-stream>

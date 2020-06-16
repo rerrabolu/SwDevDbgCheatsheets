@@ -1,0 +1,16 @@
+  
+Grep for ONE or MORE expressions:
+  
+  # Separate patterns by VERTICAL bar. No space between VERTICAL bar
+  grep -E  '<pattern-1>|<pattern-2>' <input-stream>
+
+  # Search for expressions in C/C++ files present in a directory tree
+  # and excluding certain directories
+  grep -R --exclude-dir=.git --include=*.h      \
+          --include=*.c --include=*.hpp --include=*.cpp
+ 
+  # Following is making an alias of the above command
+  alias myGrep='grep -R --exclude-dir=.git                          \
+                        --include='\''*.h'\''  --include='\''*.c'\'' \
+                        --include='\''*.hpp'\'' --include='\''*.cpp'\'''
+  

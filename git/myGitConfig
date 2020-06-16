@@ -1,0 +1,25 @@
+
+[color]
+  ui = auto
+
+[user]
+    name = "fname lname"
+    email = <mail-id e.g fname.lname@orgid.org>
+
+[core]
+    excludesfile = ~/.gitignore
+
+[push]
+    default = simple
+
+[url "ssh://<remote-server-id/"]
+    pushInsteadOf = ssh://<remote-server>/
+
+[review "<review machine id and port"]
+  username = <userId>
+  uploadtopic = true
+
+# Launch an external tool to show diff
+[diff]
+	external = ~/Scripts/extDiff.bash
+

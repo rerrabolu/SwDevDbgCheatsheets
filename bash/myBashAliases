@@ -1,0 +1,48 @@
+
+## Clear the screen
+#alias cls=clear
+
+## Alias for file listing
+#alias ls='ls -alF'
+
+## Clear whitespace from file in place
+#alias clearSpace="sed -i 's/[[:space:]]*$//'"
+
+## Alias for building single vs multi threaded
+#alias bldSt='export DASH_JAY="-j 1"'
+#alias bldMt='export DASH_JAY="-j 4"'
+
+## List contents of a debian pkg
+#alias listDebPkg='dpkg-deb -c'
+#alias extractDebPkg='mkdir Tmp; dpkg -e'
+#function extractDebPkg() {
+#  echo " " >&2;
+#  echo 'Usage: extractDebPkg <pkgName> <dirName>' # > /dev/stderr;
+#  mkdir $2;
+#  dpkg -e $1 $2;
+#  echo " " >&2;
+#}
+
+## Show files of a git changelist
+#alias listBrnch='git branch'
+#alias getBrnch='git branch --contains'
+#alias currBrnch='git branch | grep "*"'
+#alias setMasterBrnch='git checkout amd-master'
+#alias showList='git show --pretty="" --name-only'
+#alias disableGitDiff='git config --global --unset diff.external'
+#alias enableGitDiff='git config --global --add diff.external ~/Scripts/extDiff.bash'
+#alias runClang='git diff -U0 HEAD^ | ~/Scripts/clang-format-diff.py -p1 -i -style=file'
+
+## Command to download a file from a URL, replace userid with actual value
+#alias getbld='wget --user=<userId> --ask-password '
+
+## Alias for grepping only source files
+#alias myGrep='grep -R --exclude-dir='.git' --include='\''*.h'\'' --include='\''*.c'\'' --include='\''*.hpp'\'' --include='\''*.cpp'\'''
+
+## Mount Remote directories
+# alias mntRemote='sudo sshfs -o allow_other <userId>@<machineId>:<remote-dir-path> <local-dir-path>'
+
+## Mount Windows File Share to local system
+#alias mntWindowsFileShare='sudo mount -t cifs -o uid=1000,username=<userId>,rw,iocharset=utf8,sec=ntlm //<file-share-machine-id>/<path-of-folder>/ /<mount-point>'
+
+

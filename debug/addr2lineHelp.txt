@@ -1,0 +1,61 @@
+
+What are Segmentation Fault Messages:
+
+A defined behavior where state of process being killed is
+serialized for debugging later on
+
+Location of Segmentation Fault Messages:
+
+  One can check details of core dump in kernel's dmesg log
+    grep for program in  /var/log/kern.log
+
+Following is an example of a Segmentation Fault Messages.
+
+  "rocm-bandwidth-[71562]: segfault at 0  \
+        ip 00007f9aaf2d0bc3               \
+        sp 00007ffee26b43e0 error 6 in    \
+        libhsa-runtime64.so.1.1.30500[7f9aaf29a000+16d000]"
+
+Interpreting Segmentation Fault Messages:
+         Executable: rocm-bandwidth
+         Process Id: 71562
+         Fault Addr: 0
+          Instr Ptr: 00007f9aaf2d0bc3
+          Stack Ptr: 00007ffee26b43e0
+         Error Code: 6
+           Code Obj: libhsa-runtime64.so.1.1.30500
+  Base Addr of Code: 7f9aaf29a000
+   Size of Code Obj: 16d000
+
+Find Code Location of SegFault:
+  Get Segmentation Offset
+    Subtract Base Addr of Code object from Instr Ptr
+    faultOffset = 00007f9aaf2d0bc3 - 7f9aaf29a000 = 36bc3
+ 
+Run Addr2line Tool:
+
+addr2line -e <path-of-code-obj> -fCi  <faultOffset>
+
+Experimental Results:
+
+Introduced a deliberate segmentation fault in ROCr library
+  Write to a NULL location
+
+Following is the segmentation fault message
+
+  "rocm-bandwidth-[71562]: segfault at 0      \
+        ip 00007f9aaf2d0bc3                   \
+        sp 00007ffee26b43e0 error 6 in        \
+        libhsa-runtime64.so.1.1.30500[7f9aaf29a000+16d000]"
+
+Running addr2line tool shows the error occuring in "amd::GpuAgent::InitRegionList()"
+
+Log from Console:
+
+user1@RocrLnx23:~/RocmBlds$ addr2line -e ~/git/compute/out/ubuntu-16.04/16.04/lib/libhsa-runtime64.so.1 -fCi  0x36BC3
+  amd::GpuAgent::InitRegionList()
+  /home/user1/git/compute/hsa/runtime/opensrc/hsa-runtime/core/runtime/amd_gpu_agent.cpp:307
+
+user1@RocrLnx23:~/RocmBlds$ 
+
+

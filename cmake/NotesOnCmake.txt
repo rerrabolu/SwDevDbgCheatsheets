@@ -1,0 +1,110 @@
+
+Notes on CMake:
+
+https://preshing.com/20170511/how-to-build-a-cmake-based-project/
+
+CMake is a versatile tool that helps you build C/C++ projects on just
+about any platform you can think of.
+
+All CMake-based projects contain a script named CMakeLists.txt
+
+CMake generates build pipelines. Makefiles are an example of build pipeline
+on Unix-like systems.
+
+To generate a build pipeline, CMake needs to know the source and binary folders. 
+
+To generate a build pipeline, CMake needs to know the source and binary folders.
+The source folder is the one containing CMakeLists.txt. The binary folder is where
+CMake generates the build pipeline. You can create the binary folder anywhere you want.
+A common practice is to create a subdirectory build beneath CMakeLists.txt.
+
+By keeping the binary folder separate from the source, you can delete the binary folder
+at any time to get back to a clean slate. You can even create several binary folders,
+side-by-side, that use different build systems or configuration options.
+
+The cache is an important concept. It’s a single text file in the binary folder named
+CMakeCache.txt. This is where cache variables are stored. Cache variables include
+user-configurable options defined by the project, and precomputed information to help
+speed up CMake runs. You can, and will, re-run CMake several times on the same binary folder.
+
+You aren’t meant to submit the generated build pipeline to source control, as it usually
+contains paths that are hardcoded to the local filesystem. Instead, simply re-run CMake
+each time you clone the project to a new folder.
+
+
+The Configure and Generate Steps:
+
+There are several ways to run CMake. No matter how you run it, it performs two steps:
+the configure step and the generate step.
+
+The CMakeLists.txt script is executed during the configure step. This script is
+responsible for defining targets. Each target represents an executable, library,
+or some other output of the build pipeline.
+
+The configure step is said to have succeeded if CMakeLists.txt processing completed
+without errors. Depending on the contents of CMakeLists.txt, additional things may
+happen during the configure step such as:
+
+  Finds the header files and libraries 
+  Generates a header file in the source or binary folder
+
+During the generate step CMake will produce the build pipeline. The type of build
+pipeline generated depends on the type of generator used.
+
+Running CMake from the Command Line:
+
+Before running CMake, make sure you have the required dependencies for your project
+and platform. This information is generally capture in the README file.
+
+You can specify project-specific options on the command line.
+You can view project-defined cache variables by running cmake -L -N in the binary directory,
+the folder which has the artifact CMakeCache.txt file
+
+
+Running cmake-gui:
+
+Use of this offers an interactive way to set cache variables. Make sure to install
+your project’s required dependencies first. To use graphical interface,
+simply do the following:
+
+Run cmake-gui
+Specify the directory where Source is located
+Specify the directory to locate cmake configure and generate artifacts
+  This is the same as Binary directory
+Select the configure step to run
+This step will list a bunch of variable that need to be defined
+This is equivalent to running cmake -L -N in the binary directory
+  post cmake run on CMakeLists.txt in source directory
+Update the values of the variables
+Select the generate step to run
+
+
+CMake Variables:
+
+Variables are how cmake works. The variables you defined by using
+the "set" command. If you specify the keyword CACHE the value
+is saved in CMakeCache.txt file in the build folder. If you also
+specify the keyword FORCE then the value in CMakeCache.txt is
+overwritten with a new value. If not specified it will write
+into cache only if it is not defined.
+
+The variables that use CACHE are called Cache variables
+The variables that don't use CACHE are called Normal variables
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

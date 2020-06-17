@@ -1,0 +1,37 @@
+
+Procedure to Remove a file from a Commit:
+
+Follow these steps if you have a commit that has files you
+don't like to be part of the commit. For example, you have
+files A,B,C,D in a commit and you want to remove the files
+A and C from the commit.
+
+## Query the files of a commit
+<shell-prompt> alias showList='git show --pretty="" --name-only'
+<shell-prompt> showList
+  A
+  B
+  C
+  D
+
+## Run reset command to remove files
+<shell-prompt> git reset --soft HEAD~1
+
+## Query which files are in Stagin area
+<shell-prompt> git status
+  A
+  B
+  C
+  D
+
+## Unstage files you want to remove from commit  
+<shell-prompt> git reset HEAD A
+<shell-prompt> git reset HEAD C
+
+## Get unmodified version of files you want to remove
+<shell-prompt> git checkout -- A
+<shell-prompt> git checkout -- A
+
+## Commit the modified list of files as a commit
+<shell-prompt> git commit -m "Commit message - has files B and D"
+

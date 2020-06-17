@@ -1,0 +1,39 @@
+
+Procedure to Squash commits:
+
+Follow these steps if you have to merge multiple commits into one
+Let's say you made commits A,B,C on a branch. Lets say A is the
+oldest and C is the youngest. Squashing will lead to branch having
+commit A with all of the changes from B and C being brought in.
+During this process one can update the commit message so that it
+is reflective of the full work being done.
+
+## Query the number of commit messages
+<shell-prompt> git log
+ commit-A
+  Message from commit-A
+ commit-B
+  Message from commit-B
+ commit-C
+  Message from commit-C
+ commit-D
+  Message from commit-D
+ commit-E
+  Message from commit-E
+
+## You want to squash top 3 commits - A,B,C
+## Run rebase command as follows
+<shell-prompt> git rebase -i HEAD~3
+
+  In the edit window you will see the following
+
+   pick commit-C
+   pick commit-B
+   pick commit-A
+
+  Change it to following
+  
+   pick commit-C
+   squash commit-B
+   squash commit-A  
+  

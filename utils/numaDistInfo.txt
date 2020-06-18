@@ -1,0 +1,41 @@
+Origins Of Numa Distance
+
+The Numa distance exported by a system is obtained from CDIT tables
+of ACPI. Numa distance is normalized to 10 or 1.0
+
+Assume a system that has 3 nodes: A, B, C and following Numa distances:
+
+A:A - 10, A:B - 20, A:C - 20
+B:B - 10, B:A - 20, B:C - 20
+
+C:C - 10, C:A - 20, C:B - 20
+
+On such as a system accessing memory of node B or C from node A will be 2X
+more expensive.
+
+
+Q1. What is ACPI
+A1. It stands for Advanced Configuration and Power Interface. This specification
+    is a industry standard and allows BIOS to describe/encode system information.
+    It was developed to enable operating system (OS) directed motherboard device
+    configuration and power management of both devices and entire systems
+
+Q2. What is SLIT
+A2. It stands for System Locality Distance Information Table. It is an
+    industry standard and is one of the tables exported by ACPI of a system
+
+Q3. What is CDIT
+A3. It stands for Component Distance Information Table. It extends SLIT by
+    encoding information on devices such as GPU's. Following link has more
+    information:
+    http://confluence.amd.com/pages/viewpage.action?pageId=35230891
+
+Q4. Is CDIT an industry standard extension to ACPI
+A4. It is NOT A industry standard. It is available only on AMD systems
+
+Q5. Does CDIT replace SLIT instances in ACPI
+A5. No. CDIT supplements information provided by SLIT. OS modules are able to
+    get information from CDIT that is otherwise not accessible from SLIT,
+    e.g. information on GPU's.
+
+

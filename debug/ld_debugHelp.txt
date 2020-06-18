@@ -1,0 +1,20 @@
+# URL from which the following notes was taken
+http://www.bnikolic.co.uk/blog/linux-ld-debug.html
+
+Helpful URL on resolving Linking Errors
+http://linkdemo.carabinerweb.s3-website-us-east-1.amazonaws.com/
+
+ LD_DEBUG is an environemnt variable one can set to dump out a lot of
+ info about how various libraries and symbols of a program. The Linux
+ dynamic linker will consult this variable when dumping debug information.
+ One can inspect this debug info to resolve various loading problems.
+ 
+One can check the various legal values one can set this env to as follows:
+Set the env to help i.e. LD_DEBUG=help and run the command shell command
+'cat <someFileName>'. In addition one can capture the debug info into a
+file via the env LD_DEBUG_OUTPUT. Given below examples on running this
+helpful commands
+
+<shell-prompt> LD_DEBUG=libs cat ~/tmp.txt
+<shell-prompt> LD_DEBUG=libs LD_DEBUG_OUTPUT=ldDbgDump.txt cat ~/tmp.txt
+

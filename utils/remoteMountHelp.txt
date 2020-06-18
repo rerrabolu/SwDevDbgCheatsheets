@@ -1,0 +1,23 @@
+Mount Remote File System on Ubuntu
+
+// Install supporting software package
+sudo apt-get install sshfs
+
+// Create "fuse" user group if it doesn't exist
+sudo groupadd fuse
+
+// Add user who wants to mount remote filesystem
+sudo gpasswd -a $USER fuse
+
+How to mount a remote filesystem
+
+Assume a folder on the remote machine: /home/<projName>
+Assume user wants to mount on local system as: /home/<projName>
+Command to mount /home/<projName> from remote machine to local machine is as follows:
+
+sudo sshfs -o allow_other <userName>@<remoteMachine>:/home/<projName> /home/<projName>
+
+@note: Strings in angle brackets are for illustration, substitute them with real names
+@note: Sometimes one may have to use IP address instead of the name as the remote file server
+
+

@@ -1,0 +1,40 @@
+Disabling C-State Transitions:
+
+One way to manage power is to transition CPU to lower power states when
+they are in Idle mode.
+
+You can read more on this feature.
+  https://gist.github.com/wmealing/2dd2b543c4d3cff6cab7
+
+The following can be executed to disable C-state transitions to study its
+impact on performance measurements. It is important to note that the commands
+to write to latency file require sudo privileges. The command sequence listed
+below is one way to achieve this.
+
+The same is available as a script: ctrlCState.bash
+
+#
+# Specify the name of executable to run
+#
+NameOfExe="Name of executable file including path"
+
+#
+# Open Cpu Latency Control file and set desired C-state level
+#
+cpuLatency=/dev/cpu_dma_latency
+exec 33> $cpuLatency
+echo 0 >&33
+
+#
+# Print run parameters before launching application
+#
+if [ "$#" -ne 0 ]; then
+    echo "NameOfExe Run Params: $@"
+fi
+$NameOfExe "$@"
+
+#
+# Close Cpu Latency Control file
+#
+exec 33>&-
+

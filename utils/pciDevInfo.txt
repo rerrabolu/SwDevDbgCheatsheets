@@ -1,0 +1,53 @@
+Collect Pci Device Tree Info
+
+Collect Pci Device Tree as PDF
+  <shell_prompt> sudo apt-get install hwloc
+  <shell_prompt> sudo lstopo --of pdf > someOutputFileName
+
+Collect Pci Device Tree as Ascii Text for a AMD GPU device
+  <shell_prompt> lspci -tvvv -d0x1002:
+
+The way to understand the above data is as follows:
+
+  Every pciE device on the system has four Ids - Domain Id, Bus Id, Device Id, Function Id
+  The Domain Id is a 16-bit number
+  The Bus Id is a 8-bit number
+  The Device Id is a 5-bit number
+  The Function Id is a 3-bit number
+
+#
+# Relevant part of the lspci output
+#
+<shell-prompt> lspci -v -d0x1002:
+  0c:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI] Vega 10 XT [Radeon RX Vega 64]
+  0c:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Device aaf8
+
+#
+# Relevant part of the lspci output
+#
+<shell-prompt> lspci -tvv
+
+\-[0000:00]-+-00.0  Advanced Micro Devices, Inc. [AMD] Family 17h (Models 00h-0fh) Root Complex
+             +-00.2  Advanced Micro Devices, Inc. [AMD] Family 17h (Models 00h-0fh) I/O Memory Management Unit
+             +-01.0  Advanced Micro Devices, Inc. [AMD] Family 17h (Models 00h-0fh) PCIe Dummy Host Bridge
+             +-01.1-[01-09]--+-00.0  Advanced Micro Devices, Inc. [AMD] X399 Series Chipset USB 3.1 xHCI Controller
+             |               +-00.1  Advanced Micro Devices, Inc. [AMD] X399 Series Chipset SATA Controller
+             |               \-00.2-[02-09]--+-00.0-[03]----00.0  ASMedia Technology Inc. Device 2142
+             |                               +-06.0-[08]----00.0  Intel Corporation I211 Gigabit Network Connection
+             |                               \-07.0-[09]--
+             +-01.3-[0a-0c]----00.0-[0b-0c]----00.0-[0c]--+-00.0  Advanced Micro Devices, Inc. [AMD/ATI] Vega 10 XT
+             |                                            \-00.1  Advanced Micro Devices, Inc. [AMD/ATI] Device aaf8
+             +-02.0  Advanced Micro Devices, Inc. [AMD] Family 17h (Models 00h-0fh) PCIe Dummy Host Bridge
+             
+             
+@note: The numbers within bracket specify the downstream pciE device tree. The first number
+specifies the outgoing bus, while the last argument identifies the largest busId in the tree
+rooted at that node. For example the device "Vega 10" is root at bus [0c].
+
+The way to read this record in the tree is as follows:
+
+      CPU -- 00 -- 01.3 -- 0a -- 00.0 -- 0b -- 00.00 -- 0c -- 00.0 ( Vega 10 XT)
+      CPU -- 00 -- 01.3 -- 0a -- 00.0 -- 0b -- 00.00 -- 0c -- 00.1 ( Device aaf8)
+ 
+
+

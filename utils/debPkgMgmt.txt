@@ -1,0 +1,39 @@
+
+Command to List packages Installed on a System:
+  dpkg -l | awk '/^[hi]i/{print $2}'
+  
+Build & Remove ABCd Packages From a System:
+
+  Assume this software stack has packages in user and kernel domains
+
+  Construct a list of these pacakges as follows interactively or via script
+  The commands below illustrate packages starting names. Substitute them
+  with appropriate names for ABCd software stack:
+  
+    export krnlList=`dpkg -l | awk '/^[hi]i/{print $2}' | grep ^kabc`
+    export abcList=`dpkg -l | awk '/^[hi]i/{print $2}' | grep ^abc`
+    export ijkList=`dpkg -l | awk '/^[hi]i/{print $2}' | grep ^ijk`
+    export pqrList=`dpkg -l | awk '/^[hi]i/{print $2}' | grep ^pqr`
+
+  Verify that the various debian packages are actually ABCd related and
+  therefore are candidates for removal. For each each element of each list
+  run the command that removes the package completely:
+  
+    sudo apt-get purge --auto-remove <package-name>
+
+  Remove any orphan packages tha are left upon removal of all ABCd packages.
+  Orphan packages are those packages that have been installed to satisfy
+  dependencies of a package. For example abcd-ijk package may dependend
+  upon "abcd-pqr-dev". So removing abcd-ijk will not automatically remove
+  "abcd-pqr-dev" package.
+
+    sudo apt-get autoremove
+
+Error in Removing a Debian Package:
+
+  Sometimes we have to deal with errors while removing a debian package. When
+  you get an error message while remove a debian package do the following: 
+
+    Run Command:    dpkg --remove --force-remove-reinstreq <package-name>
+    Move Package:   mv /var/lib/dpkg/info/<package-name>.* /tmp/
+

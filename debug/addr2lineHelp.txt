@@ -52,10 +52,10 @@ Running addr2line tool shows the error occuring in "amd::GpuAgent::InitRegionLis
 
 Log from Console:
 
-user1@RocrLnx23:~/RocmBlds$ addr2line -e ~/git/compute/out/ubuntu-16.04/16.04/lib/libhsa-runtime64.so.1 -fCi  0x36BC3
+<shell-prompt> addr2line -e /.../.../lib/libhsa-runtime64.so.1 -fCi  0x36BC3
   amd::GpuAgent::InitRegionList()
-  /home/user1/git/compute/hsa/runtime/opensrc/hsa-runtime/core/runtime/amd_gpu_agent.cpp:307
+  /.../.../core/runtime/amd_gpu_agent.cpp:307
 
-user1@RocrLnx23:~/RocmBlds$ 
+<shell-prompt>
 
 

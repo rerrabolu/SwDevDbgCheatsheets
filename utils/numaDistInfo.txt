@@ -26,9 +26,7 @@ A2. It stands for System Locality Distance Information Table. It is an
 
 Q3. What is CDIT
 A3. It stands for Component Distance Information Table. It extends SLIT by
-    encoding information on devices such as GPU's. Following link has more
-    information:
-    http://confluence.amd.com/pages/viewpage.action?pageId=35230891
+    encoding information on devices such as GPU's.
 
 Q4. Is CDIT an industry standard extension to ACPI
 A4. It is NOT A industry standard. It is available only on AMD systems

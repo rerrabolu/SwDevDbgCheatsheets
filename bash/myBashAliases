@@ -27,7 +27,7 @@
 #alias listBrnch='git branch'
 #alias getBrnch='git branch --contains'
 #alias currBrnch='git branch | grep "*"'
-#alias setMasterBrnch='git checkout amd-master'
+#alias setMasterBrnch='git checkout master'
 #alias showList='git show --pretty="" --name-only'
 #alias disableGitDiff='git config --global --unset diff.external'
 #alias enableGitDiff='git config --global --add diff.external ~/Scripts/extDiff.bash'

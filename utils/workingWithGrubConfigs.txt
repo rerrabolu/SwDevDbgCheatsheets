@@ -1,0 +1,54 @@
+Working With Grub Configs
+
+List of amdgpu parameters:
+
+  Link-1: kernel file
+    https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+    @note: Parameters should be interpreted as having two parts. ModuleName
+    and ParamName. The substring before the first "_" gives ModuleName. The
+    string following "_" gives ParamName.
+    e.g. amdgpu_dpm == amdgpu.dpm
+    e.g. amdgpu_max_num_of_queues_per_device == amdgpu.max_num_of_queues_per_device
+  
+  Link-2: Linux Kernel documentation for various parameters of amdgpu module
+    https://www.kernel.org/doc/html/latest/gpu/amdgpu.html
+    @note: Names of parameters should be mo
+
+Overview to Add / Remove / Modify Kernel Options:
+
+  Open the file "/etc/default/grub" to configure
+  
+  Modify the value of key: "GRUB_CMDLINE_LINUX"
+  
+  Value of this key is a list of tokens separated by space
+    e.g. GRUB_CMDLINE_LINUX="quiet splash"
+  
+  Run the command "sudo update-grub" to apply config changes
+    @note:
+      Updates to GRUB_CMDLINE_LINUX are always effective.
+      Updates to GRUB_CMDLINE_LINUX_DEFAULT are effective ONLY
+      during normal boot (NOT during recovery mode)
+
+An Example - Disable Dynamic  Power Mgmt:
+
+  Consult one of the links given above that specifies the name and legal
+  values for DPM parameter
+    For Dynamic Power Mgmt parameter name is: amdgpu_dpm
+    For Dynamic Power Mgmt valid values are: [ 0 = disable, 1 = enable, -1 = auto]
+    @note: Modify parameter name from "amdgpu_dpm" to "amdpgu.dpm"
+  
+  Open the file "/etc/default/grub" to configure
+  
+  Modify the value of key: "GRUB_CMDLINE_LINUX"
+    Old Value: GRUB_CMDLINE_LINUX="xxx yyy zzz"
+  
+  Add the parameter that disables dynamic power mgmt
+    New Value: GRUB_CMDLINE_LINUX="xxx yyy zzz  amdgpu.dpm=0"
+  
+  Run the command "sudo update-grub" to apply config changes
+  
+  Reboot the system to have the changes applied
+  
+  Determine if boot parameters should persist or be removed
+    If changes are made for an experiment, remove them i.e. restore boot
+    option to old value

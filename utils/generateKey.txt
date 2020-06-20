@@ -1,0 +1,24 @@
+Steps to Generate GPG Key
+
+1. Run the command: gpg --gen-key
+
+2. Choose default values for:
+     kind of key 
+     size of key
+     life of key
+3. Confirm choices to apply
+
+4. Configure Name and Email fields
+     Name:FirstName LastName
+     Email:userId@orgId.domainId
+     @note 1: Make sure Name and Email matches values from remote machine
+     @note 2: Leave Comment field empty (default value)
+
+5. Enter a alpha-numeric as password, confirm the same value
+
+6. Most likely the key generation process will complain about not having sufficient random bytes to use
+
+7. In a separate shell cat a file in a loop until the key generation completes
+     e.g. <shell_prompt> for stream in {1..23} do cat <someTextFile> done
+
+

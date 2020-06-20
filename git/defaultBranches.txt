@@ -1,0 +1,22 @@
+
+When working with a group of repositories sometimes we need to reset
+the branches of various repos to their default one. For example repo
+forest has three repos R1, R2 and R3 and each repo has three branches
+B1, B2, B3. The configuration file that sets up the workspace defines
+B1 as default for R1, B2 for R2 and B3 for R3. This default configuration
+is explained as follows: R1::B1, R2::B2, R3::B3.
+
+Due to one or more reasons the state of the repo forest changes from its
+default condition to something as follows: R1::B3, R2::B1, R3::B1
+
+The following command should reset the repo forest to its default configuation
+
+  <shell-prompt> "query repo forest config"
+    Repo-Forest-Config: R1::B3, R2::B1, R3::B1
+  
+  <shell-prompt> repo sync -d
+  
+  <shell-prompt> "query repo forest config"
+    Repo-Forest-Config: R1::B1, R2::B2, R3::B3
+
+

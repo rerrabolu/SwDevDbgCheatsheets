@@ -1,0 +1,51 @@
+
+Check Current Kernel version of your Linux System
+
+<shell-prompt> uname -sr
+
+Ensure your current Ubuntu is up to date. Following commands
+ensure that:
+
+  1. sudo apt update
+  2. sudo apt upgrade
+
+Folling command handles changing software dependencies
+
+  1. sudo apt dist-upgrade
+
+Removes dependencies from uninstalled applications, ones
+you may removed over time.
+
+  1. sudo apt-get autoremove
+  
+Run the following to upgrade to next release
+
+  1. sudo apt install update-manager-core
+  2. sudo do-release-upgrade
+
+Update the kernel to the latest. LTS releases come with
+default kernel which very soon get newer versions that
+have fixes for the officially released kernel
+
+Google search for the latest kernel available for your new
+Ubuntu version:
+
+cd /tmp/
+
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.6/linux-headers-5.6.0-050600_5.6.0-050600.202003292333_all.deb
+
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.6/linux-headers-5.6.0-050600-generic_5.6.0-050600.202003292333_amd64.deb
+
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.6/linux-image-unsigned-5.6.0-050600-generic_5.6.0-050600.202003292333_amd64.deb
+
+wget -c https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.6/linux-modules-5.6.0-050600-generic_5.6.0-050600.202003292333_amd64.deb
+
+sudo dpkg -i *.deb
+
+Install / Upgrade Ubuntu Desktop:
+
+Not clear What this does:
+
+  1. sudo apt-get install --reinstall ubuntu-desktop
+  2. sudo apt-get -f install
+  3. sudo apt-get install --reinstall ubuntu-desktop

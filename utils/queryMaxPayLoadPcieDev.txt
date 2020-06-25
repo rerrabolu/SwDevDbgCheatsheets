@@ -1,0 +1,25 @@
+The bandwidth between any two PCIe devices is affected by the system parameter
+Maximum Payload Size - MPS. The lowest value on the path determines the
+binding value that is used in a transaction - read or write. One can query
+the MPS of a device as follows:
+
+This was obtained from following URL:
+  https://unix.stackexchange.com/questions/429512/how-can-i-query-the-pci-maxpayloadsize-that-was-negotiated-at-boot
+
+// Do no recommend this command
+#<shell-prompt> sudo lspci -vv |grep -P '^\d|Payload'
+
+# Recommend this command to execute
+<shell-prompt> sudo lspci -vv 2>&1 | tee <someLogFile.txt>
+
+Look at the value reported under DevCtl and DevCap sections of a device. It
+reports the value that is currently bound i.e. is being used versus capability
+of the device. DevCtl is live, DevCap is what is possible
+
+		DevCap:	MaxPayload 256 bytes, PhantFunc 0, Latency L0s <4us, L1 unlimited
+			ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 0.000W
+		DevCtl:	Report errors: Correctable- Non-Fatal- Fatal- Unsupported-
+			RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+
+			MaxPayload 256 bytes, MaxReadReq 512 bytes
+
+

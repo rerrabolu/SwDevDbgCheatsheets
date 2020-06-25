@@ -1,0 +1,84 @@
+Notes on PCIe Bandwidth:
+
+A good resource to read is: http://xillybus.com/doc/xillybus-bandwidth
+
+Another good read is: https://www.xilinx.com/support/documentation/white_papers/wp350.pdf
+
+PCIe specification dictates the general parameters that affect PCIe bandwidth
+Of these parameters following are relevant:
+
+  Signal encoding by physical layer
+    Loss is 20.0% for PCIe Gen 1 and 2 which uses 8/10
+    Loss is ~1.54% for PCIe Gen 3, 4, 5 and 6 which uses 128/130
+  
+  Header/Trailing guards from Physical layer
+  
+  Header/Trailing guards from Data Link layer
+  
+  Header/Trailing guards from Transaction Link layer
+
+PCIe specifies clock frequency as part of data i.e. clock is derived from data
+
+For purposes of understanding this note focusses on PCIe Gen 3 transfers only.
+Following is the schema of data transfer (Writes) for sizes up to 4096 bytes:
+  Phy Layer Hdr "Start" - 4 bytes
+    Data Link Layer Hdr "Sequence" - 2 bytes
+      Transaction Layer Hdr "Header" -  12-16 bytes
+      Transaction Layer Payload - 0-4096 bytes
+      Transaction Layer Suffix "ECRC" - 4 bytes
+    Data Link Layer Suffix "LCRC" - 4 bytes
+
+In the above schema, the sum of headers and trailer adds upto 32 bytes.
+In above schema, the size of payload is determined by system parameter called
+Maximum Payload Size (MPS). Assuming a MPS of 128, 256, 512, etc we can
+calculate the cost of overhead.
+
+  MPS(0128) = (0128) / (0128 + 32) = 80%
+  MPS(0256) = (0256) / (0256 + 32) = 88.8%
+  MPS(0512) = (0512) / (0512 + 32) = 94.11%
+  MPS(1024) = (1024) / (1024 + 32) = 96.96%
+
+One can query the MPS of a PCIe device by running the following command
+
+  <shell-prompt> sudo lspci -vv
+
+Look for the lines under "DevCtl" that has the string "MaxPayload". This
+tells you the size negotiated by the device to communicate with other
+PCIe devices. To know the capability of the device look for lines under
+the section "DevCap"
+
+For Read requests the payload size generally is determined by RCB - Read
+Completion Boundary. This allows a payload of 64 bytes and an overhead of
+20 bytes for packet headers & trailers. Therefore to transfer 64 bytes we
+have to send 64 / (64 + 20) = 76% efficiency. On a PCIe gen 3 system with
+16 lanes we should get about 15.75 GB/sec * 0.76 = 11..97 GB/sec.
+
+Computing PCIe Bandwidth Considering Only Signal Encoding:
+
+  PCIe Gen 1 operates at 2.5 GT/sec and uses 8/10 encoding. This means each
+  lane of the device actually sends only 2.0 GT/sec of data. Translating this
+  to bytes this becomes 0.25 GB/sec. A device with 16 lanes will then have a
+  total bandwidth of 16 * 0.25 GB/sec = 4 GB/sec
+
+  PCIe Gen 2 operates at 5.0 GT/sec and uses 8/10 encoding. This means each
+  lane of the device actually sends only 4.0 GT/sec of data. Translating this
+  to bytes this becomes 0.5 GB/sec. A device with 16 lanes will then have a
+  total bandwidth of 16 * 0.5 GB/sec = 8 GB/sec
+
+  PCIe Gen 3 operates at 8 GT/sec and uses 128/130 encoding. This means each
+  lane of the device actually sends only .984 GT/sec of data. Translating this
+  to bytes this becomes 984 MB/sec. A device with 16 lanes will then have a
+  total bandwidth of 16 * 984 MB/sec = 15.75 GB/sec
+
+  PCIe Gen 4 operates at 16.0 GT/sec and uses 128/130 encoding. This means each
+  lane of the device actually sends only 15.753 GT/sec of data. Translating this
+  to bytes this becomes 1.969 GB/sec. A device with 16 lanes will then have a
+  total bandwidth of 16 * 1.969 GB/sec = 31.5 GB/sec
+
+  PCIe Gen 5 operates at 32.0 GT/sec and uses 128/130 encoding. This means each
+  lane of the device actually sends only 31.5 GT/sec of data. Translating this
+  to bytes this becomes 3.93 GB/sec. A device with 16 lanes will then have a
+  total bandwidth of 16 * 3.93 GB/sec = 63.01 GB/sec
+
+
+

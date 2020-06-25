@@ -1,0 +1,39 @@
+
+Reasons To Download Gerrit Patch:
+
+Apply all the downloaded code to a different branch
+Review changes locally using diff tools that are more familiar
+Selectively pick some of the changes into other branches of code
+
+Download the patch into a local branch:
+#######################################
+
+  Execute the commands provided on gerrit for "CHECKOUT"
+  Create a new branch that contains the downloaded patch
+  
+    // URL is obtained from gerrit. Rest are standard commands
+   <shell-prompt> git fetch URL-FOR-THE-PATCH
+   <shell-prompt> git checkout FETCH_HEAD
+
+
+Download the patch as a new commit into local branch:
+#####################################################
+
+  Assume you have a branch called "WorkingBranch" and has one or
+  more changes related to a feature. You wish to pull in changes
+  from another branch to be added to your working branch. You can
+  do the following:
+  
+    // URL is obtained from gerrit. Rest are standard commands
+   <shell-prompt> git checkout <WorkingBranch>
+   <shell-prompt> git fetch URL-FOR-THE-PATCH
+   <shell-prompt> git cherry-pick FETCH_HEAD
+
+  If there are any code conflicts resolve them and ask
+  git to accept resolution
+
+    // Assume there are conflicts. If so resolve them manually
+    // Then run the following command
+   <shell-prompt> git cherry-pick --continue
+
+

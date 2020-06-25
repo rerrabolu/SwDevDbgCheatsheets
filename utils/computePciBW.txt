@@ -1,0 +1,73 @@
+Establish Known Parameters:
+
+x.  Memory is 64-bit addressable
+
+x.  Data to be sent 64 MB = 2^26
+
+x.  MaxPayload = 256 bytes = 2^8
+
+x.  Packet overhead is 32 bytes, per following schema
+
+    Phy Layer Hdr "Start" - 4 bytes
+      Data Link Layer Hdr "Sequence" - 2 bytes
+        Transaction Layer Hdr "Header" -  12-16 bytes
+        Transaction Layer Payload - 0-4096 bytes
+        Transaction Layer Suffix "ECRC" - 4 bytes
+      Data Link Layer Suffix "LCRC" - 4 bytes
+    Sum Total = 32 bytes
+
+x.  Link is running @ 8 Gb / sec
+    @note: Ignoring 1.5 % loss due to symbol encoding
+    This implies it take 1 nanosec to transmit 8 bits = 1 byte
+
+x.  Number of lanes on device = 16 lanes
+    Implies 16 * 1 bytes can be sent per nsec
+
+Calculate TLP and DLLP Transfer Times
+
+x.  Number of packets to transfer
+    64 MB / 256 bytes = 2^26/2^8 = 2^18 = 256 K
+
+x.  Time to transfer one Transaction Layer Packet (TLP)
+    [(256 + 32) (data + pkt overhead) / 16 bytes/clock] * 1 nsec/clock
+    
+    288/16 = 18 clocks = 18 nsec
+    
+x.  Time taken to transfer 256K packets is
+    2^18 * 18 nsec = 9 * 2^19 nsec = 9 * 512 * 2^10 nsec
+    This is approximately 10 * 512 * 2^10 nsec = 4718592 nsec
+    4718592 nsec = 4.7 millisec
+    
+x.  Time to transfer one Data Link Layer Packet (DLLP)
+    To transfer a DLLP which is 8 bytes in size, it takes
+      8 bytes / 16 bytes/clock = 1/2 clock = 0.5 nsec
+
+Reasonable Assumptions About System Parameters:
+
+x.  One DLLP Ack packet is sent for every 5 TLP's
+    We have about 256K TLP. Therefore we need to send
+    about 256K/5 = 51.2K packets.
+
+x.  Time taken to send 51.2K ACK packets
+    51.2K / 2 = 25.6K nsecs
+ 
+x.  One DLLP FC packet is sent for every 4 TLP's
+    We have about 256K TLP. Therefore we need to send
+    about 256K/4 = 64K packets.
+
+x.  Time taken to send 64K ACK packets
+    64K / 2 = 32K nsecs
+
+Calculate Bandwidth:
+
+x.  Total bytes transferred = 64 MB = 2^26 bytes
+
+x.  Transfer time:
+
+         TLP Time: 256K * 18 nsec = 4.7 millisecs
+    DLLP ACK Time: 25.6K * 1/2 nsec = 25.6K nsecs = 25.6 microsecs
+     DLLP FC Time: 64K * 1/2 nsec = 32K nsecs = 32 microsec
+       Total Time: 4757.6 microsecs = 4.756 millisecs
+     
+    
+    

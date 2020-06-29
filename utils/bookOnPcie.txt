@@ -1,0 +1,4 @@
+
+https://www.mindshare.com/files/ebooks/PCI%20Express%20System%20Architecture.pdf
+Look at the chapter 21 - PCI Express Enumeration
+

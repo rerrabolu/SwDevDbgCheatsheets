@@ -1,0 +1,29 @@
+When doing a memory Read, the bandwidth is affected by a system parameter
+called Root Completion Boundary (RCB). This is something that is specified
+by PCIe specification to be 64 or 128 bytes. This value is bound by Root Complex
+and is used to configure end-point devices as well. You can find this value in the
+end point's LnkCtl field.
+
+RCB specifies how data for a read request shoud be returned and includes
+address alignment. For example requesting 512 bytes from two different
+addresses a1 and a2 impacts as to how many Transaction Layer Packets are
+used to send the data. This is because each  packet has a maximum size that
+is specified by RCB plus an address alignment requirement
+
+Following is a log from a lspci command that shows it
+
+// Do no recommend this command
+#<shell-prompt> sudo lspci -vv |grep 'LnkCtl:'
+
+# Recommend this command to execute
+<shell-prompt> sudo lspci -vv 2>&1 | tee <someLogFile.txt>
+
+Look at the value reported under LnkCtl section of a device. It reports the value
+that is currently bound i.e. is being used versus capability of the device. LnkCtl
+is live, LnkCap is what is possible
+
+		LnkCap:	Port #0, Speed 8GT/s, Width x16, ASPM L0s L1, Exit Latency L0s <64ns, L1 <1us
+			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk+
+			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+

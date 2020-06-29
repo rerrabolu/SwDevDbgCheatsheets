@@ -1,7 +1,7 @@
-The bandwidth between any two PCIe devices is affected by the system parameter
-Maximum Payload Size - MPS. The lowest value on the path determines the
-binding value that is used in a transaction - read or write. One can query
-the MPS of a device as follows:
+For a memory write transatcion the bandwidth between any two PCIe devices
+is affected by the system parameter Maximum Payload Size - MPS. The lowest
+value on the path determines the binding value that is used in a transaction
+One can query the MPS of a device as follows:
 
 This was obtained from following URL:
   https://unix.stackexchange.com/questions/429512/how-can-i-query-the-pci-maxpayloadsize-that-was-negotiated-at-boot

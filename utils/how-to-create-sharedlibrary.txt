@@ -1,0 +1,74 @@
+
+How To Create A Shared Library:
+
+The steps to create a shared library are quite simple.
+There are two steps in this process and they are compilation
+and linking.
+
+Compilation:
+  Compile the various source files that form the library
+Linking:
+  Link the various object files into a dynamic library
+
+Names Of A Shared Library:
+
+  A shared library's name comes in 3 forms
+    Linker Name:  lib<name>.so          // libc.so
+         SoName:  lib<name>.so.X        // libc.so.6
+   Release Name:  lib<name>.so.X.Y.Z    // libc.so.6
+
+  HOW ARE THESE NAMES USED: They come into play when
+  building a shared library or an executable that relies
+  on another shared library. This is best illustrated by
+  an example.
+  
+  Let us assume that source code that is used to build shared
+  library libFoo depends upon symbols from libKoo. During the
+  build process of libFoo, symbols of libKoo are provided via
+  "Linker Name" (libKoo.so). The linker "ld" that is used during
+  this process will embed all relevant info about libKoo in the
+  shared library libFoo being produced.
+  
+  Generally speaking the object libKoo.so is a link to SONAME.
+  But specification allows a LinkerName object to be a linker
+  script instead. Without regard to what a LinkerName object
+  points to, the intent is provide more details as to how symbols
+  of referenced libary (e.g. libKoo) can be found and resolved.
+  
+  An example, where the Linker Name points to a linker script is
+  that of "C" library libc.so. One can open libc.so (it is a text
+  file afterall) and see that it includes information about SONAME
+  plus additional info. In the case of libc.so the additonal info
+  describes symbols that are provided by a static library i.e. they
+  are not found in the shared library of libc.so.X
+  
+  Finally the SONAME object simply points to a RELEASE_NAME object
+  A RELEASE_NAME object has version, minor numbers for sure. It is
+  not required to have a release number.
+
+
+Example:
+
+  Assumes it does not depend upon any external code
+
+  Assume you have one source files myAdd.c and myAdd.h
+  The source file myAdd.c implements add function that
+  is declared in myAdd.h
+
+    int add(int x, int y);
+    int add(int x, int y) { return (x + y); }
+
+  gcc -c -Wall -Werror -fPIC myAdd.c
+  gcc -shared -o libMyAdd.so myAdd.o
+  
+  @note 1: It is important that code is compiled with -fPIC
+  option which specifies Position Independent Code
+  
+  To use the shared library produced above simply write a test
+  application that references one of the symbols of the shared
+  library. Build it with following option for linker
+  
+  gcc -L<path-where-shared-lib-exists> -Wall main.c -o main -l<name-of-lib>
+  e.g. gcc -L/home/RameshErrabolu/Libs/ -Wall main.c -o main -lMyAdd
+  
+

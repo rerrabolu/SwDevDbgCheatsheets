@@ -1,0 +1,124 @@
+
+Notes on generating doxygen documentation for a given code base.
+
+How To Run:
+
+  #
+  # This will automatically scan code from the right locations and write
+  # output data to the right locations as specified in the config file
+  #
+  <shell-prompt> doxygen <configuration-file-name>
+
+Overview:
+
+1.  doxygen uses a configuration file to generate documentation. The
+    configuration file is a list of key-value pairs along with comments.
+    Comments are line based and start with # sign as the first 
+
+    # Doxygen selects the parser to use depending upon the extension of file
+    EXTENSION_MAPPING = 
+
+2.  Users must specify which tags should be turned ON/OFF, given values, etc
+    based on their project needs.
+
+3.  By default doxygen can recognize code for popular languages such
+    as C, C++, Java, Python, etc.
+
+4.  doxygen relies on a tool called "dot" which must be installed and made
+    available via PATH or a doxygen configuration file tag "HAVE_DOT". This
+    tool of GraphViz and could be downloaded from http://www.graphviz.org
+
+
+Define following TAGS:
+
+1.  Specify a name for the project, including a brief description
+
+      PROJECT_NAME = "Om Sai Ram"
+
+      PROJECT_BRIEF = "Antharyami who walked on earth"
+
+2.  Specify the directory where doxygen should write its output
+
+      OUTPUT_DIRECTORY = /home/sai/ram/doxygen-output
+
+3.  Determine if you would like doxygen to write its output into separate
+    subdirs or all of it one directory. Default value is NO
+
+      CREATE_SUBDIRS = YES
+
+4.  Define the tags "INPUT", "RECURSIVE" and "EXCLUDE_PATTERNS" with list of directories
+    to scan code from and filter. One can separate the directories onto new lines via
+    escape-line character. Alternatively one can use concatenation operator as well.
+    Following is an example.
+
+      INPUT = /home/aaa/bbb/ccc/  \
+              /home/lll/mmm/nnn/  \
+              /home/xxx/yyy/zzz/ 
+      
+                  OR
+
+      INPUT = /home/aaa/bbb/ccc/
+      INPUT += /home/lll/mmm/nnn/
+      INPUT += /home/xxx/yyy/zzz/
+
+      RECURSIVE = YES
+
+      EXCLUDE_PATTERNS = */<name-of-dir-you-dont-want>/*
+
+5.  Define the tag "HAVE_DOT" to YES
+
+      HAVE_DOT = YES
+
+6.  Define how many spaces are used for a tab. Legal values are 1 - 16
+
+      TAB_SIZE = 2
+
+7.  Define following tag if code uses STL classes but does not want to use a
+    tag file to specify STL source files
+
+      BUILTIN_STL_SUPPORT = YES
+
+8.  Enable the tag to consider multiline comments for CPP files as brief.
+    Also enable related field
+    
+      MULTILINE_CPP_IS_BRIEF = YES
+      JAVADOC_AUTOBRIEF = YES
+
+9.  Configure doxygen to extract documentation for all entities such as
+    public / private / static, etc
+
+      EXTRACT_ALL = YES
+      EXTRACT_STATIC = YES
+      EXTRACT_PRIVATE = YES
+      EXTRACT_LOCAL_METHODS = YES
+
+10.  Determine if output in all formats or just one of them
+      
+      GENERATE_HTML = YES
+      GENERATE_LATEX = NO
+
+11. Determine if you want inheritance and collaboration diagrams in UML style
+    Also determine if you want limit number of fields to show per class node.
+    The max one can choose is 100
+
+      UML_LOOK = YES
+      UML_LIMIT_NUM_FIELDS = 81
+ 
+12. Determine if you want to generate call graph both forward and reverse
+
+      CALL_GRAPH = YES
+      CALLER_GRAPH = YES
+ 
+13. Determine the maximum number of graph nodes and their depth. The
+    corresponding maxima are 10,000 and 1000 respectively
+    
+      DOT_GRAPH_MAX_NODES = 5000
+      MAX_DOT_GRAPH_DEPTH = 100
+
+14. Enable the tag "SOURCE_BROWSER" in the configuration file so that user
+    can look at source code while browsing through documentation. Check the
+    other tag VERBATIM_HEADERS is also set to YES
+
+      SOURCE_BROWSER = YES
+      VERBATIM_HEADERS = YES
+

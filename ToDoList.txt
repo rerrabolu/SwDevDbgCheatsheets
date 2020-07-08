@@ -1,0 +1,56 @@
+Following is a brief list of small projects that would be helpful:
+
+Project 1:
+
+  A simple cmake build project
+    Source code is distributed over multiple folders
+    Source code exists at a depth of at least 2
+    Build should build code of each folder as a static lib - e.g. "util.a"
+    The master CMake file should do the following:
+      Use the list "*.a" files and generate the output
+      Be able to support generation of shared library "libFoo.so" file OR
+        Be able to support generation of static library "libFoo.a" file
+
+Project 2:
+  
+  A C++ Wrapper to allow tracing and other functionality to be easily built
+  on top of existing C apis. Need to find out how to do this. How will it
+  impact existing users.
+
+Project 3:
+
+  A standalone library to print function name, its parameters and return value
+  The library shouldbe able to print names of api's and other data structures
+  based o header files that are provided as input. For example, library will
+  support a api to load a header file and after loading one or more header
+  files it should allow the library to finalize them i.e. be able to print
+  them.
+
+Project 4:
+  Need a simple script that will do the following:
+    Use strace to launch an application
+    Parse output to get the list of libraries application is using
+    Parse output to get location of the libraries application is using
+  
+  Challenges:
+    Get the strace option that will get the raw information
+    Any option that minimizes the verbosity of the information dump
+    Look for patterns that satisfy above criteria
+
+Project 5:
+
+
+Project 6:
+
+
+Project 7:
+
+
+Project 8:
+
+
+Project 9:
+
+Project 10:
+
+

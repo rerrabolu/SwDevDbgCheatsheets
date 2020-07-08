@@ -1,0 +1,25 @@
+
+Notes is taken from an article by Julia Evans. The link is at
+
+https://jvns.ca/blog/2017/03/19/getting-started-with-ftrace/
+
+A tool that enables ftrace to be used in easy manner is "trace-cmd"
+One can install that as: "sudo apt-get install trace-cmd"
+
+It appears we can use this tool to capture calls to KFD and AMDGPU
+functions. I am going to experiment and see what can be done.
+
+Briefly one can get the list of kernel functions that can traced via
+ftrace. The command to get the list is: "sudo trace-cmd list -f"
+
+A simple dump shows about ~63,000 functions that can be captured via
+ftrace. A filtering of these for amdgpu driver show about ~330 functions
+
+To capture only calls to amdgpu module one can configure the run as
+follows:  "echo '*:mod:amdgpu' > set_ftrace_filter"
+
+This will ensure that ony calls to amdgpu will be logged.
+
+
+
+

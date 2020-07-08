@@ -1,0 +1,117 @@
+
+Notes from article @ Intel
+  https://software.intel.com/content/www/us/en/develop/articles/opencl-20-shared-virtual-memory-overview.html
+
+Another article that has good example code is @ ARM
+  https://developer.arm.com/documentation/101574/0301/opencl-2-0/shared-virtual-memory?lang=en
+
+SVM - Shared Virtual Memory was first released as part of OpenCL 2.0
+
+SVM allows the development of applications that use the same pointer
+on both HOST and DEVICE side. Previously a pointer that is assigned
+to a buffer for access by HOST is not guaranteed to work on DEVICE
+side. The following code piece illustrates this feature.
+
+  // OpenCL 2.0 Implementation
+  // Following call sequence will work
+  buffAddr = AllocateSomeBuffer(size);
+  START-HOST-Access(buffAddr);
+  START-DEVICE-Access(buffAddr);
+  
+  // OpenCL NOT 2.0 Implementation
+  // Application needs to handle buffer differently
+  buffAddrDev = AllocateSomeBuffer(size);
+  buffAddrHost = MapBuffer(buffAddrDev)
+  START-HOST-Access(buffAddrHost);
+  START-DEVICE-Access(buffAddrDev);
+
+SVM features are organized into different feature classes of SVM
+support. It is not required that all OpenCL platforms support all
+SVM features defined by the OpenCL 2.0 specification. The OpenCL
+2.0 specification defines a minimum level of SVM support that is
+required for all OpenCL 2.0 implementations while other features
+are marked as optional. The host application should query the
+OpenCL implementation to determine which level of SVM is supported
+and route to the specific application code path that uses that level.
+
+
+Coarse-Grained buffer SVM: Sharing occurs at the granularity of
+  regions of OpenCL buffer memory objects.
+  
+  The buffer objects are allocated using OpenCL Api's. A buffer
+  is bound to the DEVICE side from the moment of creation.
+  
+  Before HOST can access a coarse-grain buffer it must be mapped
+  for access. At the end of access it must be unmapped. The buffer
+  should not be accessed by DEVICE while HOST is accessing it and
+  vice versa.
+  
+  Cross-device atomics are not supported.
+  
+  Following is a snippet of example code:
+ 
+    // Allocate, Map and Initialize on Host side
+    float* ptr = (float*)clSVMAlloc(---);
+    clEnqueueSVMMap(---, CL_TRUE, ptr, ---);
+    ptr[idx] = ---;
+    clEnqueueSVMUnmap(---, ptr, ---);
+
+    // Launch a kernel to work on the buffer
+    clEnqueueNDRange(---);
+    clFinish(- - -);
+
+    // Map and  Read data produced by the kernel
+    clEnqueueSVMMap(---, CL_TRUE, ptr, ---);
+    ---  = ptr[idx];
+    clEnqueueSVMUnmap(---, ptr, ---);
+
+  
+
+Fine-Grained buffer SVM: Sharing occurs at the granularity of
+  individual loads and stores within OpenCL buffer memory objects.
+  
+  The buffer objects are allocated using OpenCL Api's. However, unlike
+  coarse-grain buffers, HOST can begin using the buffer immediately 
+  without any calls to Map and Unmap the buffer.
+  
+  Cross-device atomics are optional.
+
+  
+  Following is a snippet of example code:
+ 
+    // Allocate and Initialize on Host side
+    float* ptr = (float*)clSVMAlloc(---);
+    ptr[idx] = ---;
+
+    // Launch a kernel to work on the buffer
+    clEnqueueNDRange(---);
+    clFinish(- - -);
+
+    // Read the data produced by the kernel
+    ---  = ptr[idx];
+  
+
+
+Fine-Grained system SVM: Sharing occurs at the granularity of
+  individual loads/stores occurring anywhere within the host memory.
+  
+  The buffer objects are allocated using system functions such as
+  malloc, new, etc
+  
+  Cross-device atomics are optional.
+  
+  Following is a snippet of example code:
+
+    //_aligned_malloc is one of the
+    // methods to allocate aligned
+    // memory to ensure efficient data
+    // processing in the kernel
+    float* ptr = (float*)_aligned_malloc(size, sizeof(cl_float16));
+    ptr[idx] = ---;
+
+    // Launch a kernel to work on the buffer
+    clEnqueueNDRange(---);
+    clFinish(- - -);
+
+    // Read the data produced by the kernel
+    ---  = ptr[idx];

@@ -1,0 +1,11 @@
+Overview Of Commands:
+
+  -- git tag -a <tag-name> -m "<message>"
+  -- git push origin <tag-name>
+
+An example is as follows:
+
+	-- git tag -a rocm-3.6.0 -m "rocm-bandwidth-test for ROCm release 3.6"
+	-- git push origin rocm-3.6.0
+
+

@@ -1,0 +1,22 @@
+
+One can use objdump to get the symbols of a library, perhaps even an
+executable. Lookup the man page for objdump. I used it to dump out the
+various functions of ROCm Runtime library - ROCr. The command to execute
+to get the list of functions is:
+
+  objdump -d "library-name"
+
+This will dump out a lot of information. One must parse this output to look
+for lines that end with a semi-colon and has some unique string associated
+with information you are looking for. Since the interest was to look for lines
+that has "hsa", it was used to grep out those lines and ensure they also
+include a semi-colon. Three lines of this processed output is given below for
+reference:
+
+  000000000006dadc <_ZN4rocr3HSA8hsa_initEv>:
+  000000000006db20 <_ZN4rocr3HSA13hsa_shut_downEv>:
+  000000000006db77 <_ZN4rocr3HSA19hsa_system_get_infoE17hsa_system_info_tPv>:
+
+
+
+

@@ -1,0 +1,152 @@
+
+Documentation:
+  https://jvns.ca/blog/2017/03/19/getting-started-with-ftrace/
+  Article 1: https://lwn.net/Articles/365835/
+  Article 2: https://lwn.net/Articles/366796/
+  Article 3: https://lwn.net/Articles/370423/
+  https://www.kernel.org/doc/Documentation/trace/ftrace.txt
+  https://events.static.linuxfound.org/sites/events/files/slides/linuxconjapan-ftrace-2014.pdf
+
+
+What is ftrace ?
+
+  Ftrace is suite of services that allow developers and designers
+  of systems to find what is going on inside the kernel.
+
+How does it work ?
+
+  It uses the gcc option "-pg" to embed in every function of
+  kernel a call to special function "mcount". The function
+  mcount is implemented in assembly as it does not follow
+  normal C ABI. During compilation all of the call sites of
+  mcount are recorded. At boot time they are converted to
+  NOP's until they are activated via ftrace.
+
+Can you list the services that ftrace provides ?
+  Following is a brief list of services that are available:
+    hwlat, blk, mmiotrace,
+    function_graph wakeup_dl,
+    wakeup_rt wakeup function nop
+
+  Are there others in addition to above
+
+Do all kernel builds support ftrace ?
+  No, kernel build must be configured to support ftrace.
+  The configuration names are: 
+    CONFIG_FUNCTION_TRACER
+    CONFIG_FUNCTION_GRAPH_TRACER
+    CONFIG_STACK_TRACER
+    CONFIG_DYNAMIC_FTRACE
+  
+  Are there other config options in addition to above
+  
+What does it mean by configuring a kernel build ?
+  It is simply a way of specifying which functionality must
+  be built into kernel. This is best illustrated via an example.
+  
+  Let's say one wants to add support for a new experimental
+  feature FooBar. This feature is implemented by files in a
+  certain folder and are denoted by build flag CONFIG_FOOBAR.
+  A kernel is said to support FooBar feature only if build flag
+  CONFIG_FOOBAR is added to its build infrastructure.
+  
+  In this regard, a kernel build could be considered as enabling
+  a list of build flags each specifying a feature/service (i.e the
+  list of source files that implement it) to be compiled and linked.
+  
+
+Which configuration options of ftrace are enabled by Default ?
+  Would like to know
+
+Which configuration options of ftrace need to be enabled explicitly ?
+  Would like to know
+
+How does user access ftrace functionality ?
+  Ftrace uses the tracefs file system "/sys/kernel/tracing/" to hold
+  the control files as well as the files to display output.
+
+
+How do I know which ftrace services are enabled on a system ?
+  Simply read the file "/sys/kernel/tracing/available_tracers"
+  
+  My query on a test system showed the following:
+    hwlat, blk, mmiotrace,
+    function_graph wakeup_dl,
+    wakeup_rt wakeup function nop
+
+ 
+How do I clear the ring buffer that is used to hold ftrace data
+  Simply run following command:
+    echo > /sys/kernel/tracing/trace 
+
+Can I specify a list of functions to work on by ftrace ?
+  Simply write the list of functions to file: "/sys/kernel/tracing/set_ftrace_filter"
+  For example to collect trace for only amdgpu module one can do
+  the following:
+
+    # To log amdgpu functions via ftrace
+    echo '*:mod:amdgpu' > set_ftrace_filter 
+
+
+Can I specify a list of functions to should be excluded by ftrace ?
+  Simply write the list of functions to file: "/sys/kernel/tracing/set_ftrace_notrace"
+  
+How can I reset the files set_ftrace_filter, set_ftrace_notrace, trace
+  to their default values:
+  Simply run following command:
+    echo > /sys/kernel/tracing/<file-name> 
+  
+How does one use ftrace ?
+  Clear ring buffer of any data from previous ftrace session
+    Simply run following command:
+      echo > /sys/kernel/tracing/trace
+  Next determine which ftrace service you want to use?
+    Choices are: function or function_graph or etc
+    @note: Not clear if it is possible to enable more than
+    one service at a time. For now enable only ONE service
+    e.g. function
+  Next TURN ON ftrace service
+    Write the integer "1" to the file "/sys/kernel/tracing/tracing_on"
+  After collecting log for required time or event stop
+    ftrace service
+    Write the integer "0" to the file "/sys/kernel/tracing/tracing_on"
+  Copy the file "/sys/kernel/tracing/trace" to any place and process it
+    for information analysis
+
+  @note: The file "/sys/kernel/tracing/trace" has data from all
+  participating CPUs interleaved. To follow data from only one
+  CPU one can collect trace data from corresponding CPU. For
+  example, if one is interested in data from CPU C<i>, one
+  can look at the file "/sys/kernel/tracing/per_cpu/C<i>/trace"
+  One can collect "trace" files from all relevant CPUs that are
+  involved in a scenario.
+
+Can We Configure and Enable ftrace from a C program
+  Access the file list given above from C program to collect
+    ftrace data for sections of data that you are interested
+    in.
+      Write to set_ftrace_filter functions one is interested in
+      Write to tracing_on 0 or 1 to turn ON or OFF
+      Write to trace_marker a string to mark the point of your log
+  
+
+Can We Configure and Enable ftrace from inside Kernel:
+  ftrace exports two api in this regard. They are:
+    tracing_on(); and tracing_off();
+  This assumes the kernel already has this code in the build.
+  If it does not then the kernel could be updated and rebuilt.
+
+
+TO-DO-FOR-SIMPLE-USE:
+
+Need a simple script that will do the following:
+  Use strace to launch an application
+  Parse output to get the list of libraries application is using
+  Parse output to get location of the libraries application is using
+  
+Challenges:
+  Get the strace option that will get the raw information
+  Any option that minimizes the verbosity of the information dump
+  Look for patterns that satisfy above criteria
+  
+  

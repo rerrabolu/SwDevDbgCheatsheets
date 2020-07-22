@@ -1,0 +1,46 @@
+
+ltrace is a utility available for users to collect calls that are made to a
+shared library. One can look into the man page for more details.
+
+@note: Based on comments on stackoverflow, etc it appears ltrace is not available
+on all platforms / architectures
+
+To collect the calls made to a shared library run ltrace as follows:
+
+  Log in as Root
+    <shell-prompt> sudo -s
+  Run the executable via ltrace
+    <shell-prompt> ltrace -l <lib-name-1> -l <lib-name-2> -l <lib-name-3> <executable-and-its-args>
+    <shell-prompt> ltrace -l libhsa-runtime64.so.1 -l libhsakmt.so.1 rocm-bandwidth-test -t
+
+  It appears the trace function includes some semblance of function parameters
+  and their return value. For example one can check the output and see if any
+  api's returned error value. An example statement with and without error are
+  given:
+
+    PASS: rocminfo->hsa_agent_get_info(0x20e35d0, 0xa011, 0x7ffc39f26ec0, 110) = 0
+    FAIL: rocminfo->hsa_agent_get_info(0x212a3d0, 0xa011, 0x7ffc39f26ec0, 0x7ffc39f26b40) = 4096
+
+  @note: I have noticed that running the same with as sudo does not seem to
+  work. For some reason I was not seeing calls made to ROCt library. Ony upon
+  logging in as root did they show up. Very weird
+
+Testing on two Ubuntu systems shows that the above procedure works without
+having to run it in sudo mode.
+
+Challenges:
+
+x.  While it is good to be able to see return values and to some extent input
+    parameters, it does not allow the program to be forcefully exited upon an
+    error condition
+
+x.  Secondly it is not clear if this will work on all Linux distributions.
+    Does this work on CentOS system. Need to test it out
+
+x.  It is not clear that one can run a workload that starts off in Python library
+    Can I test it
+
+
+
+
+

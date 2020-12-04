@@ -8,7 +8,7 @@ Some of the basic projects that are intended include the following:
 04  Create a Linux Module + Device + SysFs + IOCTL's
 05  Create a Linux Module + Device + SysFs + IOCTL's + SysFS Children
 06  Create a Linux Module + Device + SysFs + IOCTL's + Work Queues
-07
+07  Create a Linux Module + Code from a Config Option
 08
 09
 10

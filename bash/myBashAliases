@@ -23,6 +23,11 @@
 #  echo " " >&2;
 #}
 
+# Commands related to debian packages
+#alias listDebPkg='dpkg-deb -c'
+#alias purgeDebPkg='sudo dpkg --purge'
+#alias removeDebPkg='sudo dpkg --remove'
+
 ## Show files of a git changelist
 #alias listBrnch='git branch'
 #alias getBrnch='git branch --contains'
@@ -44,5 +49,52 @@
 
 ## Mount Windows File Share to local system
 #alias mntWindowsFileShare='sudo mount -t cifs -o uid=1000,username=<userId>,rw,iocharset=utf8,sec=ntlm //<file-share-machine-id>/<path-of-folder>/ /<mount-point>'
+
+
+#
+# Enable / Disable setting of gerrit change id as part of commit message
+#
+#alias onChangeId='git config --add gerrit.createChangeId true'
+#alias offChangeId='git config --add gerrit.createChangeId false'
+#alias getChangeId='echo `git config --get gerrit.createChangeId`'
+#alias pushCmd='echo git push gerritgit HEAD:refs/heads/<userId>/<branchName>'
+
+
+# Print the Configs used to build Linux kernel
+#alias lnxConfig='cat /boot/config-$(uname -r)'
+#alias intel='lnxConfig | grep -i config_intel_iommu'
+
+# Alias to list/enable/disable function tracing capabilities
+#alias lnxCurrTracer='sudo cat /sys/kernel/debug/tracing/current_tracer'
+#alias lnxListTracers='sudo cat /sys/kernel/debug/tracing/available_tracers'
+
+#alias lnxResetTrace='sudo echo nop > /sys/kernel/debug/tracing/current_tracer'
+#alias lnxTraceFunc='sudo echo function > /sys/kernel/debug/tracing/current_tracer'
+#alias lnxTraceFuncGraph='sudo echo function_graph > /sys/kernel/debug/tracing/current_tracer'
+#alias lnxDumpTrace='sudo cat /sys/kernel/debug/tracing/trace'
+
+#alias lnxIsTracingOn='sudo cat /sys/kernel/debug/tracing/tracing_on'
+#alias lnxEnableTrace='sudo echo 1 > /sys/kernel/debug/tracing/tracing_on'
+#alias lnxDisableTrace='sudo echo 0 > /sys/kernel/debug/tracing/tracing_on'
+
+#alias lnxIsStackTraceOn='sudo cat /proc/sys/kernel/stack_tracer_enabled'
+#alias lnxDumpStackTrace='sudo cat /sys/kernel/debug/tracing/stack_trace'
+#alias lnxEnableStackTrace='sudo echo 1 > /proc/sys/kernel/stack_tracer_enabled'
+#alias lnxDisableStackTrace='sudo echo 0 > /proc/sys/kernel/stack_tracer_enabled'
+
+# Aliases to enable/disable print statements in kernel
+#alias enableAmdgpuPrints="sudo echo 'module amdgpu +flpt' > /sys/kernel/debug/dynamic_debug/control"
+#alias disableAmdgpuPrints="sudo echo 'module amdgpu -flpt' > /sys/kernel/debug/dynamic_debug/control"
+
+# Alias to run gdb showing SRC code
+#alias gdb='gdb -tui '
+
+# Alias to reboot gracefully
+#alias myReboot='sudo shutdown -r now'
+
+# Alias Flush DNS Cache of the system
+#alias flushDns=`systemd-resolve - -flush-caches`
+#alias flushDns='sudo systemd-resolve --flush-caches'
+
 
 

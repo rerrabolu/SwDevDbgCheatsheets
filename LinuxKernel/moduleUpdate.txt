@@ -1,0 +1,48 @@
+
+The steps are as follows:
+
+1. Remove the dkms module
+2. Update the code of dkms module
+3. Build and install the dkms module
+4. Update the initramfs to load the newly built module
+5. Reboot
+
+Procedure for Ubuntu:
+#####################
+
+Assuming the dkms package that is currently being used is amdgpu-3.9-17 and that Linux
+kernel is 5.4.0-52-generic one can run the following commands:
+
+1. Remove the dkms module
+  1A. sudo dkms remove -m amdgpu -v 3.9-17 --all
+2. Update the code of dkms module
+  2A. Use your favorite editor to change code located in /usr/src/amdgpu-3.9-17/amd/- - - folder
+3. Build and install the dkms module
+  3A. sudo dkms install amdgpu -v 3.9-17  -k  5.4.0-52-generic
+4. Update the initramfs to load the newly built module
+  4A. sudo update-initramfs -u -k 5.4.0-52-generic
+5. Reboot
+  5A. sudo reboot
+
+Procedure for RED HAT:
+######################
+
+Assuming the dkms package that is currently being used is amdgpu-3.8-30.el7 and that Linux kernel
+is 4.18.0-240.1.1.el8_3.x86_64 one can run the following commands:
+
+1. Remove the dkms module
+  1A. sudo dkms remove -m amdgpu -v 3.8-30.el7 --all
+2. Update the code of dkms module
+  2A. Use your favorite editor to change code located in /usr/src/amdgpu-3.8-30.el7/amd/- - - folder
+3. Build and install the dkms module
+  3A. sudo dkms install amdgpu -v 3.8-30.el7  -k  4.18.0-240.1.1.el8_3.x86_64
+4. Update the initramfs to load the newly built module
+  4A. sudo dracut -f -v
+5. Reboot
+  5A. sudo reboot
+
+@note: Suggest adding some print statements to ensure you are running the updated dkms module of amdgpu
+
+It is not clear if the above commands work as is on other Linux distributions - e.g. Red Hat, CentOS, etc
+
+

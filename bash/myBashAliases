@@ -5,6 +5,16 @@
 ## Alias for file listing
 #alias ls='ls -alF'
 
+
+# How to go from one tab to another
+#alias vimListTag="echo g+]"
+#alias vimJmpTag="echo ctrl+]"
+#alias vimRetTag="echo ctrl+t"
+#alias vimPrevTab="echo In Vim\'s control mode enter\: gT"
+#alias vimNextTab="echo In Vim\'s control mode enter\: gt"
+#alias vimLoadTags="echo In Vim \:set tags+=path of tags file"
+#alias vimLoadCscope="echo In Vim \:cs add \"path of Cscope DB file"
+
 ## Clear whitespace from file in place
 #alias clearSpace="sed -i 's/[[:space:]]*$//'"
 

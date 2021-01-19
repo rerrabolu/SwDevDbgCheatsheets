@@ -37,6 +37,10 @@ if [[ "$logFlag" -eq 1 ]]; then
   # information, so try to limit to functions
   # with certain substrings
   #
+  # @note: It is not possible to get function_graph
+  # for a module. One must specify the function(s)
+  # that should be tracked
+  #
   # echo ':mod:amdgpu' >  set_ftrace_filter
   # echo 'kfd_*' >  set_ftrace_filter
   # echo 'amdgpu_*' >  set_ftrace_filter

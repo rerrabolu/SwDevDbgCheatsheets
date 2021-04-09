@@ -1,0 +1,86 @@
+
+
+In Linux sysfs is an in-memory filesystem that exports information about system.
+Here information being exported is about devices, drivers, interconnects, etc.
+etc. Sysfs came about in Linux 2.6 because "proc" filesystem was used to export
+various non-process related info.
+
+Sysfs filesystem is RAM based and is mounted at /sys folder. It is used to
+export kernel data structures and their attributes from kernel to the user
+space. One strength and weaknes of sysfs is the rule to encode only ONE value
+per sysfs file. Sysfs enables kernel to support both read and write of values.
+
+By default, sysfs is compiled into Linux kernel. It is dependent on CONFIG_SYSFS
+being enabled in kernel configuration. If sysfs is not already mounted, one can
+do so as follows: mount -t sysfs sysfs /sys
+
+Inside the kernel sysfs implementation uses following objects:
+
+  struct kobject defined in include/linux/kobject.h
+  Has three fields: name, parent, kref
+  Is used to construct directories
+
+  // Input parameter kobj must have its fields
+  // name and parent populated
+  int sysfs_create_dir(struct kobject *kobj);
+  void sysfs_remove_dir(struct kobject *kobj);
+  int sysfs_rename_dir(struct kobject *kobj, const char *new_name);
+
+  // Friendlier Api's to work with sysfs are
+
+  // Will return pointer to the newly created dir
+  // Will return null in case of error
+  // Users can pass null for parent which will be
+  //  interpreted as /sys directory
+  struct kobject*
+    kobject_create_and_add(const char *name,
+                           struct kobject *parent);
+
+  // Api to remove a directory
+  void kobject_del(struct kobject *kobj);
+
+  // Api to rename a directory
+  int kobject_rename(struct kobject *kobj,
+                     const char *new_name)
+
+Kernel reference counts instances of kobject. Whenever a module
+accesses a kobject, it must indicate the same by incrementing
+its reference count. It should decrement when it is done using
+it. The api's that enable this increment and decrement are:
+
+  // Increment and Decrement apis. Get increments it
+  struct kobject* kobject_get(struct kobject *kobj);
+  struct kobject* kobject_put(struct kobject *kobj);
+
+Files in sysfs are represented by objects of type struct attribute.
+In addittion to name, it has a mode parameter which defines the
+permissions on the file - RWX. Kernel defines an object of type
+struct kobj_attribute to bind wrapper functions that could be
+used to read/write the files.
+
+  struct kobj_attribute {
+   struct attribute attr;
+
+    ssize_t (*show)(struct kobject *kobj,
+                    struct kobj_attribute *attr, char *buf);
+    ssize_t (*store)(struct kobject *kobj,
+                     struct kobj_attribute *attr,
+                     const char *buf, size_t count);
+  };
+
+
+
+Sysfs Conventions:
+
+One value per file
+Values should be text-based and map to simple C types
+It is possible to provide an array of values of same type
+  Delineate such values very clearly - e.g. comma, semi-colon, etc
+
+FAQ:
+
+How does one get the parent of a kobject ?
+How does one get the set (kset) of a kobject ?
+
+
+

@@ -43,6 +43,7 @@ is 4.18.0-240.1.1.el8_3.x86_64 one can run the following commands:
 
 @note: Suggest adding some print statements to ensure you are running the updated dkms module of amdgpu
 
-It is not clear if the above commands work as is on other Linux distributions - e.g. Red Hat, CentOS, etc
+It is not clear if the above commands work as is on other Linux distributions
+- e.g. Red Hat, CentOS, SLES, etc
 
 

@@ -1,4 +1,5 @@
 
+Introduction:
 
 In Linux sysfs is an in-memory filesystem that exports information about system.
 Here information being exported is about devices, drivers, interconnects, etc.

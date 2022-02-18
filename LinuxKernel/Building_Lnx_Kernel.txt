@@ -1,0 +1,103 @@
+
+@note: Hereafter AMDGPU kernel module, the driver for AMD GPUs
+will be simply referred to as DRVR
+
+Introduction:
+
+	There exist many scenarios where it is not possible to use DKMS
+	package of DRVR. In such scenarios one has to build Linux Kernel
+	with DRVR included in it.
+
+	Example_1:
+		Validate DRVR changes that involve locking are SAFE. Config
+		options that warn user of incorrect locking are disabled in
+		official kernels. To validate these changes, we have to build
+		a kernel that has LOCKDEP related config options enabled
+
+	Example_2:
+		Validate DRVR changes that involve peer-to-peer communication.
+		A config option that is essential in this regard is PCI_P2PDMA,
+		one that isn't enabled in most recent kernes (e.g. 5.11). To test
+		DRVR changes that rely on this option one has to build a kernel
+		that has this and allied config options enabled.
+
+	@note: The procedures given below assumes the following:
+		Developer is familiar with ROCm build scripts
+		Build and TARGET systems are using same Linux kernel version
+			e.g. 5.11, 5.13, etc
+		The Linux distribution is Ubuntu
+
+Build_Linux_Kernel_Using_Default_ROCm_Config:
+
+	ROCm developer systems support a script called "build_kernel.sh",
+	that enables one to build a Linux Kernel with DRVR. The set of
+	config options that are enabled by this build script are defined
+	in the config file: ".../arch/x86/configs/rock-dbg_defconfig"
+
+	One can extend this default config file as appropriate and use it
+	to build a Linux kernel with DRVR changes. If this works then one
+	can use this scheme to build and test all of the changes.
+
+Build_Linux_Kernel_Using_Imported_Config:
+
+	In one or more cases the Linux kernel built using "ROCm Config"
+	will NOT work on TARGET systems i.e. it will not boot or one or
+	more kernel modules is not properly configured.
+
+	Per my experience using "ROCm Config" did not work on ROCm systems
+	that I had access to for testing peer-to-peer communication. In such
+	cases, one has no choice but to build a Linux kernel that relies on
+	a config spec that is known to work. That procedure is given below:
+
+	On TARGET system install an official candidate kernel
+		e.g. 5.11, 5.13, etc
+	Validate a recent release of DRVR on TARGET system
+	Collect the list of config options enabled on TARGET system
+		Copy the file /boot/config-$(uname -r)
+	Copy the config file to build system
+	Overwrite default config file rock-dbg_defconfig
+	Run build_kernel.sh to build kernel using imported config options
+
+	@note: It is possible to optimize the config spec imported from
+	TARGET system.  To do so follow the procedure given in section
+	"Export_Optimized_Config_Spec"
+
+Export_Optimized_Config_Spec:
+
+	The config spec associated with an official release of kernel 
+	has way too many options enabled. This is by design as the kernel
+	is expected to boot on multiple TARGET systems.
+
+	It is highly likely that a significant number of these options
+	are not needed for the TARGET system being used to validate. One
+	can remove from official config spec options that are not needed
+	by following the procedure given below:
+
+	Clone Linux kernel code base on to TARGET system
+		e.g. git clone https://github.com/torvalds/linux/tree/v5.11
+
+	Install Linux kernel build tool chain. This includes things like
+		compilers, linkers, packaging tools, etc
+
+		sudo apt-get install	build-essential		\
+								gcc bc bison flex	\
+								libssl-dev libelf-dev libncurses5-dev
+
+	Cd into Linux kernel src root directory. This is the folder that
+		has files such as "Kbuild", "Kconfig", "kernel", "driver", etc
+
+	Save ".config" if one is exists. Rename it for potential use in
+		future scenarios
+
+	Run the command "make localmodconfig". Accept default values for
+	any questions or choose as appropriate. This part will take some
+	time about 5 minutes and will generate/overwrite ".config" file
+
+	Copy ".config" file to build system to seed the build of Linux
+		kernel using procedure give above
+
+Notes from a lecture on building Linux kernel:
+
+    https://www.linuxfromscratch.org/
+    https://www.youtube.com/watch?v=IXA0GNTLf_Q
+

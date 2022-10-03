@@ -1,0 +1,19 @@
+Is it possible to collect a core dump of the segmentation fault.
+
+Run following commands to enable:
+
+// Core files should be available in /tmp folder
+ulimit -c unlimited
+sysctl -w kernel.core_pattern=/tmp/core_%e_%p
+Run the workload
+Get its process Id:  "ps -ef | grep <workloadName>"
+
+When a hang occurs i.e. app is stuck and has not core dumped
+Issue the bash command: "gcore <process-id>"
+
+Assumption is workload can be run as ONE process and get the segmentation fault.
+In case it needs at least TWO processes then user should get process Id for both
+processes and issue gcore command for both processes.
+
+Core files take  up a large amount space. A test core file for rocm-bandwidth-test was about 4.5 GB.
+

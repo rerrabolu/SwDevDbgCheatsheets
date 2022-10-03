@@ -2,3 +2,14 @@ Debugging a Python Child Process Core Dump:
 
   Configure system to capture core dumps
   Run gdb python <core-dump-filename>
+
+Launch a python program using gbd
+
+#
+# Execution stack trace upon running the following command
+#   gdb -ex r --args python3 ram_ncf.py \
+#     ml-20m -l 0.0005 -b 2048 --layers 256 256 128 64 \
+#     -f 64  --seed 1  --epochs 2 --processes 4 \
+#     --spawn_processes --num_test_elems 8
+#
+

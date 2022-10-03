@@ -1,0 +1,65 @@
+
+
+All of the faults are occuring in USER MODE while trying to READ an invalid/unmapped address
+from some instruction located in libamdhip64.so object.
+
+Below is an explanation:
+
+[343.419373] python3[4096]: segfault at 3f07d870     ip 00007f678d8f31fc   sp 00007ffdbe01c520   error 4 in libamdhip64.so[7f678d7c1000+1cd000]
+
+        Timestamp: [343.419373]
+        Program Exe: python3[4096]
+        Error: segfault
+        Address: 3f07d870 (it is in hex)
+        Instr Ptr: 00007f678d8f31fc (it is in hex)
+        Stack Ptr: 00007ffdbe01c520
+        Access Type: error 4
+        Object Name: libamdhip64.so
+        Obj Base: 7f678d7c1000
+        Obj Size: 1cd000
+
+
+Since we know the Instr Ptr and Base of offending object we can use the tool "addr2line" to
+see if we can get any meaningful info.
+
+Aaddr2line-Arg =  ((Instr Ptr)  - (Obj Base)) =  (00007f678d8f31fc  - 7f678d7c1000) = 1321FC
+
+Now run the command addr2line as follows:  addr2line -e <path-to-libamdhip64.so> -fCi 1321FC
+
+Someone who has access the system that is showing the problem can run addr2line and share the results.
+
+An example log message is given below:
+
+Segfaults from dmesgLog-2.txt
+  [125709.877546] python3[52219]: segfault at 7fba19200000 ip 00007fb97cd8f5a7 sp 00007fff191264d8 error 4 in libamdhip64.so.3.5.30500[7fb97cc43000+1ee000]
+  [125715.397820] python3[52460]: segfault at 0 ip 00007f4bf62a658d sp 00007ffcb6ed6a18 error 4 in libamdhip64.so.3.5.30500[7f4bf615a000+1ee000]
+    
+Segfaults from dmesgLog-4.txt
+  [124964.133796] python3[50204]: segfault at 7f8656548000 ip 00007f85af74d5a7 sp 00007ffcf5dfd0a8 error 4 in libamdhip64.so.3.5.30500[7f85af601000+1ee000]
+  [124972.168694] python3[50739]: segfault at 2d4dc100 ip 00007fb1b76c673c sp 00007ffdcc77df20 error 4 in libamdhip64.so.3.5.30500[7fb1b7579000+1ee000]
+
+Aaddr2line-Arg =  ((Instr Ptr)  - (Obj Base)) =  (00007f678d8f31fc  - 7f678d7c1000) = 1321FC
+  Computed Offsets:
+  offset-1 = 00007f85af74d5a7 - 7f85af601000 = 14C5A7
+  offset-2 = 00007fb1b76c673c - 00007f678d8f31fc = 4A29DD3540
+  offset-3 = 00007fb97cd8f5a7 - 7fb97cc43000 = 14C5A7
+  offset-4 = 00007f4bf62a658d - 7f4bf615a000 = 14C58D
+  @note: offset-1 and offset-3 compute to be same
+
+
+Query symbol in libamdhip.so that has the offending instruction
+
+  root@662f5cb33562:/mlperf/ncf# 
+  root@662f5cb33562:/mlperf/ncf# addr2line -e /opt/rocm/hip/lib/libamdhip64.so -fiC 14C5A7 
+  amd::Memory::getDeviceMemory(amd::Device const&, bool)
+  :?
+  root@662f5cb33562:/mlperf/ncf# addr2line -e /opt/rocm/hip/lib/libamdhip64.so -fiC 4A29DD3540
+  ??
+  ??:0
+  root@662f5cb33562:/mlperf/ncf# 
+  root@662f5cb33562:/mlperf/ncf# addr2line -e /opt/rocm/hip/lib/libamdhip64.so -fiC 14C58D
+  amd::Memory::getDeviceMemory(amd::Device const&, bool)
+  :?
+  root@662f5cb33562:/mlperf/ncf# 
+
+

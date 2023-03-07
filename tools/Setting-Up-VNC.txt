@@ -1,0 +1,21 @@
+Using VNC to Access
+	Involves two steps
+		Setting up of VNC Server
+		Connecting to VNC Server
+
+Setting up of VNC Server:
+	Involves two steps
+		Installation of VNC server
+		Start VNC server at power up
+	@note: Instructions for above steps can be found at
+		https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-vnc-on-ubuntu-20-04
+
+Connecting to VNC Server:
+	Assumes VNC server is up and running at default port of 5901
+	Use PORT forwarding to connect to VNC server on <mach-name>.<comp>.<domain>
+		One can use IP number as well
+	This is accomplished by running the following command
+		ssh -L 5903:localhost:5901 -C -N -l <user-name>  <mach-name>.<comp>.<domain>
+			Port 5903 belongs to localhost
+			Port 5901 belongs to VNC server
+

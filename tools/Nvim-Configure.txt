@@ -1,0 +1,44 @@
+Install & Setup of Neovim:
+
+Install the following libraries and binaries:
+
+	1. Prep system for installation
+			sudo apt-get update -y
+
+	2. Install CURL, to download from network
+			sudo apt install curl   
+			sudo apt install python3-pycurl
+			@note: Install python bindings to curl
+
+	3. Install Neovim binary, the editor
+			sudo apt-get install neovim
+			@note: Command to launch neovim is: nvim
+
+	4. Install Neovim GUI
+			sudo apt-get install -y neovim-qt
+			@note: Command to launch neovim-qt is: nvim-qt
+			@note: I launch neovim-qt as: 'nvim-qt -- --'
+
+	5. Install Nodejs
+			curl -sL https://deb.nodesource.com/setup_16.x \
+				  -o /tmp/nodesource_setup.sh
+			sudo bash /tmp/nodesource_setup.sh
+			sudo apt install nodejs        
+			@note: https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04        
+
+
+Setting up Neovim:
+
+	1. Create init.nvim in ~/.config/nvim folder
+			@note Create this folder if it does not exist after running nvim
+
+	2. Populate it with values you like. These include let & set directives
+			@note: Consult init.vim files shared by folks on internet
+			e.g. User NeuralNine @ https://www.youtube.com/watch?v=JWReY93Vl6g
+
+	3. Install a plugin manager
+			Update init.nvim to use various plugins
+			@note: Consult notes shared by folks on internet
+			e.g. User NeuralNine @ https://www.youtube.com/watch?v=JWReY93Vl6g
+
+

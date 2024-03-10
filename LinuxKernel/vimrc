@@ -1,0 +1,76 @@
+" config.vim
+
+" {{{ Behaviour
+set nocompatible
+let mapleader= ","
+let g:map_leader = ","
+set number                " Show numbers on the left
+" set relativenumber        " Its better if you use motions like 10j or 5yk
+set hlsearch              " Highlight search results
+set ignorecase            " Search ignoring case
+set smartcase             " Do not ignore case if the search patter has uppercase
+set noerrorbells          " I hate bells when an error occurs
+set belloff=esc           " Disable bell if type <esc> multiple times
+set tabstop=4             " Tab size of 4 spaces
+set softtabstop=4         " On insert use 4 spaces for tab
+set shiftwidth=4
+set expandtab             " Use appropriate number of spaces
+set nowrap                " Wrapping sucks (except on markdown)
+set noswapfile            " Do not leave any backup files
+set nobackup              " Make a backup of file being edited
+set history=108           " Remember last N commands
+set columns=120           " Set the number of chars per line
+set mouse=nvci            " Enable mouse on Normal, Visual, Command and Insert modes
+set fileformats=unix,dos
+
+"set clipboard=unnamed,unnamedplus     " Use the OS clipboard
+set showmatch             " Highlights the matching parenthesis
+set termguicolors         " Required for some themes
+set splitright splitbelow " Changes the behaviour of vertical and horizontal splits
+set foldlevel=1           " Better for markdown and PHP classes
+set cursorline            " Highlight the current cursor line (Can slow the UI)
+set signcolumn=yes        " Always show the signcolumn, otherwise it would shift the text
+set hidden
+filetype plugin indent on " Enable file type detection.
+let &t_EI = "\e[2 q"      " Make cursor a line in insert on Vim
+let &t_SI = "\e[6 q"      " Make cursor a line in insert on Vim
+
+set ruler               " show the cursor position all the time
+set showcmd             " display incomplete commands
+set lines=36            "specify the number of lines in window"
+
+
+syntax on
+":colorscheme ron
+":colorscheme pablo
+:colorscheme murphy
+":colorscheme peachpuff
+"set guifont=Courier_New:h14:cANSI   "specify the font and its properties"
+set guifont=Monospace\ 11   "specify the font and its properties"
+
+" Set properties for foldable which makes code browsing easier
+set foldmethod=manual
+set foldnestmax=10
+set foldenable
+set foldlevel=3
+set foldcolumn=4
+
+
+set directory=/home/amd/Ramesh/vimWorkDir/swaps/      "Location of swap files"
+set backupdir=/home/amd/Ramesh/vimWorkDir/backups/    "Location of backups"
+
+"
+" Disable BELL on ESC keyboard button
+"
+set noeb vb t_vb=
+
+
+"set tags=.\\tags,tags,C:\\HSA\fsaApiTags,C:\\HSA\fsaRuntimeTags
+"
+
+"
+" Set the default directory for vim to write files
+"
+:cd /home/amd/Ramesh/vimWorkDir
+
+

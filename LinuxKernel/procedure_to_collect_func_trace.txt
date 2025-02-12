@@ -1,0 +1,62 @@
+Prerequisites:
+
+	Ensure the following configs are enabled:
+
+	CONFIG_FUNCTION_TRACER=y
+	CONFIG_FUNCTION_GRAPH_TRACER=y
+	CONFIG_TRACING=y
+	CONFIG_FTRACE=y
+	CONFIG_FTRACE_SYSCALLS=y
+	CONFIG_DYNAMIC_FTRACE=y
+	CONFIG_PROC_KALLSYMS=y
+	CONFIG_TRACEPOINTS=y
+
+	One can verify their status by running the following command
+		cat /boot/config-$(uname -r) | grep <config-of-interest>
+		cat /boot/config-$(uname -r) | grep CONFIG_FUNCTION_TRACER
+
+	Ensure debugfs filesystem is mounted
+		sudo ls /sys/kernel/debug/tracing
+		If it is not found then you must mount it
+			sudo mount -t debugfs none /sys/kernel/debug
+
+
+Execute the following command sequence good
+
+1 Load the module
+	e.g. sudo modprobe <module_name>
+	e.g. sudo modprobe re_module_6
+
+2. Get the name of the function of interest
+	e.g. sudo cat /proc/kallsyms | grep <module_name> | <function_name>
+	e.g. sudo cat /proc/kallsyms | grep re_module_6 | grep dev_write
+
+3. Enable Ftrace framework's capability to trace function(s)
+	echo function | sudo tee /sys/kernel/debug/tracing/current_tracer
+	echo <function_name> | sudo tee /sys/kernel/debug/tracing/set_ftrace_filter
+    e.g. echo dev_write | sudo tee /sys/kernel/debug/tracing/set_ftrace_filter
+    @note: Repeat the above step for each of the functions
+    @note: One can setup tracing to add all functions of a module or file
+    	For file, the syntax is [ echo 'file:file.c' | sudo tee /sys/kernel/debug/tracing/set_ftrace_filter ]
+        For module, the syntax is [ echo ':mod:${module_name}' | sudo tee /sys/kernel/debug/tracing/set_ftrace_filter ]
+	@note: The above syntax only adds those functions that share that prefix
+		It will not functions that do not share the module_name/file_name prefix
+		
+4. Enable tracing of the functions specified above
+	echo 1 | sudo tee /sys/kernel/debug/tracing/tracing_on
+
+5. Run workload of interest
+	sudo rocm-bandwidth-test -a
+
+6. Disable collection of function trace data
+	echo 0 | sudo tee /sys/kernel/debug/tracing/tracing_on
+
+7. Collect function trace data
+	e.g. sudo cat /sys/kernel/debug/tracing/trace > <name-of-logfile>
+	e.g. sudo cat /sys/kernel/debug/tracing/trace_pipe > MyFuncTrace.txt
+
+8. Reset the function trace data file
+    echo  > /sys/kernel/debug/tracing/trace
+    
+
+	

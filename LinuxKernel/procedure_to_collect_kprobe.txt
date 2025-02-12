@@ -1,0 +1,65 @@
+Prerequisites:
+
+	Ensure the following configs are enabled:
+
+	CONFIG_FUNCTION_TRACER=y
+	CONFIG_FUNCTION_GRAPH_TRACER=y
+	CONFIG_TRACING=y
+	CONFIG_FTRACE=y
+	CONFIG_FTRACE_SYSCALLS=y
+	CONFIG_DYNAMIC_FTRACE=y
+	CONFIG_PROC_KALLSYMS=y
+	CONFIG_TRACEPOINTS=y
+
+	One can verify their status by running the following command
+		cat /boot/config-$(uname -r) | grep <config-of-interest>
+		cat /boot/config-$(uname -r) | grep CONFIG_FUNCTION_TRACER
+
+	Ensure debugfs filesystem is mounted
+		sudo ls /sys/kernel/debug/tracing
+		If it is not found then you must mount it
+			sudo mount -t debugfs none /sys/kernel/debug
+
+
+
+Execute the following command sequence good
+
+	Assume you are attaching and collecting data
+    for only one kprobe. If you wish to attach
+    more kprobes, do it before running the
+    workload. Remember to disable all of the
+    kprobes before collecting their trace data
+
+1. Load the module
+	e.g. sudo modprobe <module_name>
+	e.g. sudo modprobe re_module_6
+
+2. Get the address where the function of interest exist
+	e.g. sudo cat /proc/kallsyms | grep <module_name> | <function_name>
+	e.g. sudo cat /proc/kallsyms | grep re_module_6 | grep dev_write
+
+3. Attach a kprobe to the function's entry point
+	e.g. echo "p:<kprobe_name> <function_addr" | sudo tee /sys/kernel/debug/tracing/kprobe_events
+	@note: The address obtained from kallsyms file does not have 0x prefix
+	@note: One must add 0x prefix when creating a kprobe
+	e.g. echo "p:my_dev_write_probe 0xffffffffc5e850e0" | sudo tee /sys/kernel/debug/tracing/kprobe_events
+
+4. Enable tracing of the kprobe
+	e.g. echo 1 | sudo tee /sys/kernel/debug/tracing/events/kprobes/<probe_name>/enable
+	e.g. echo 1 | sudo tee /sys/kernel/debug/tracing/events/kprobes/my_dev_write_probe/enable
+
+5. Run workload of interest
+	sudo rocm-bandwidth-test -a
+
+6. Disable collection of kprobe trace data
+	e.g. echo 0 | sudo tee /sys/kernel/debug/tracing/events/kprobes/<probe_name>/enable
+	
+7. Collect kprobe trace data
+	e.g. sudo cat /sys/kernel/debug/tracing/trace > <name-of-logfile>
+	e.g. sudo cat /sys/kernel/debug/tracing/trace > MyKprobe.txt
+
+8. Remove the kprobe
+	e.g. echo '-:<probe_name>' | sudo tee /sys/kernel/debug/tracing/kprobe_events
+	e.g. echo '-:my_dev_write_probe' | sudo tee /sys/kernel/debug/tracing/kprobe_events
+	
+	

@@ -252,7 +252,7 @@ def setFtraceBaseline():
     with open("/sys/kernel/debug/tracing/max_graph_depth", "w") as f:
         f.write("0")
 
-    # Reset Enable function tracer in Ftrace
+    # Reset function tracer in Ftrace
     with open("/sys/kernel/debug/tracing/current_tracer", "w") as f:
         f.write("nop")
 

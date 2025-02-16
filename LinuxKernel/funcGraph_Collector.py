@@ -17,8 +17,8 @@ usr_mod_func_map = {}
 def printHelpScreen():
     """Print the help screen with available modes."""
     print("\nScript requires one input: '1' or '2'")
-    print("\t Mode-1 Enables Function Trace")
-    print("\t Mode-2 Disables Function Trace\n")
+    print("\t Mode-1 Enables Function Graph Trace")
+    print("\t Mode-2 Disables Function Graph Trace\n")
 
 
 #
@@ -231,6 +231,7 @@ def setupModFuncs():
 #   "tracing_on"
 #   "current_tracer"
 #   "buffer_size_kb"
+#   "max_graph_depth"
 #   "set_ftrace_filter"
 #
 def setFtraceBaseline():
@@ -247,6 +248,10 @@ def setFtraceBaseline():
     with open("/sys/kernel/debug/tracing/set_ftrace_filter", "w") as f:
         f.write("")
 
+    # Reset function_graph to trace default depth
+    with open("/sys/kernel/debug/tracing/max_graph_depth", "w") as f:
+        f.write("0")
+
     # Reset Enable function tracer in Ftrace
     with open("/sys/kernel/debug/tracing/current_tracer", "w") as f:
         f.write("nop")
@@ -262,6 +267,7 @@ def setFtraceBaseline():
 #   "tracing_on"
 #   "current_tracer"
 #   "buffer_size_kb"
+#   "max_graph_depth"
 #   "set_ftrace_filter"
 #
 def enableFtraceBaseline():
@@ -273,9 +279,13 @@ def enableFtraceBaseline():
     with open("/sys/kernel/debug/tracing/buffer_size_kb", "w") as f:
         f.write("16384")
 
-    # Enable function tracer in Ftrace
+    # Set function_graph to trace default depth
+    with open("/sys/kernel/debug/tracing/max_graph_depth", "w") as f:
+        f.write("6")
+
+    # Enable function_graph tracer in Ftrace
     with open("/sys/kernel/debug/tracing/current_tracer", "w") as f:
-        f.write("function")
+        f.write("function_graph")
 
     # Enable FTrace to begin collection of data
     with open("/sys/kernel/debug/tracing/tracing_on", "w") as f:

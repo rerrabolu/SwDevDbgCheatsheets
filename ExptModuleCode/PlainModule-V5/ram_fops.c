@@ -93,8 +93,4 @@ void teardown_module_5(void)
     pr_err("Sairam_5: End Teardown the Char device\n");
 }
 
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Your Name");
-MODULE_DESCRIPTION("A simple char device that can read and write data");
-
 

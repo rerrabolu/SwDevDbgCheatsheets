@@ -6,10 +6,10 @@
 #include <linux/device.h>
 #include <linux/init.h>
 
-#include "ram_fops_impl.h"
+#include "ram_fops_core.h"
 
-#define DEVICE_NAME "re_device_7"
-#define CLASS_NAME "re_class_7"
+#define DEVICE_NAME "re_device_9"
+#define CLASS_NAME "re_class_9"
 
 static struct device *re_device = NULL;
 static struct class *re_class = NULL;
@@ -17,12 +17,12 @@ static struct cdev re_cdev;
 static dev_t dev_number;
 static int major_number;
 
-int create_module_7(void);
-void teardown_module_7(void);
+int create_module_9(void);
+void teardown_module_9(void);
 
 extern const struct file_operations fops;
 
-int create_module_7(void)
+int create_module_9(void)
 {
 
 	int ret;
@@ -30,20 +30,20 @@ int create_module_7(void)
     // Allocate a major number dynamically
     ret = alloc_chrdev_region(&dev_number, 0, 1, DEVICE_NAME);
     if (ret < 0) {
-        pr_err("Sairam_7: Failed to allocate major number\n");
+        pr_err("Sairam_9: Failed to allocate major number\n");
         return ret;
     }
     major_number = MAJOR(dev_number);
-    pr_err("Sairam_7: Obtained Major number for Char device: %d\n", major_number);
+    pr_err("Sairam_9: Obtained Major number for Char device: %d\n", major_number);
 
     // Create the class
     re_class = class_create(CLASS_NAME);
     if (IS_ERR(re_class)) {
         unregister_chrdev_region(dev_number, 1);
-        pr_err("Sairam_7: Failed to register device class\n");
+        pr_err("Sairam_9: Failed to register device class\n");
         return PTR_ERR(re_class);
     }
-    pr_err("Sairam_7: Created Class for Char device\n");
+    pr_err("Sairam_9: Created Class for Char device\n");
 
     // Initialize the character device
     cdev_init(&re_cdev, &fops);
@@ -51,10 +51,10 @@ int create_module_7(void)
     if (ret < 0) {
         class_destroy(re_class);
         unregister_chrdev_region(dev_number, 1);
-        pr_err("Sairam_7: Failed to add character device\n");
+        pr_err("Sairam_9: Failed to add character device\n");
         return ret;
     }
-    pr_err("Sairam_7: Created and Added CDEV for Char device\n");
+    pr_err("Sairam_9: Created and Added CDEV for Char device\n");
 
     // Create the device file
     re_device = device_create(re_class, NULL, dev_number, NULL, DEVICE_NAME);
@@ -62,19 +62,19 @@ int create_module_7(void)
         cdev_del(&re_cdev);
         class_destroy(re_class);
         unregister_chrdev_region(dev_number, 1);
-        pr_err("Sairam_7: Failed to create device file\n");
+        pr_err("Sairam_9: Failed to create device file\n");
         return PTR_ERR(re_device);
     }
 
-    pr_err("Sairam_7: Char device's major number is: %d\n", major_number);
-    pr_err("Sairam_7: Load a char device that supports R/W operations\n");
+    pr_err("Sairam_9: Char device's major number is: %d\n", major_number);
+    pr_err("Sairam_9: Load a char device that supports R/W operations\n");
     
     return 0;
 }
 
-void teardown_module_7(void)
+void teardown_module_9(void)
 {
-    pr_err("Sairam_7: Begin Teardown the Char device\n");
+    pr_err("Sairam_9: Begin Teardown the Char device\n");
 
     dev_t dev_number = MKDEV(major_number, 0);
 
@@ -83,7 +83,7 @@ void teardown_module_7(void)
     class_destroy(re_class);
     unregister_chrdev_region(dev_number, 1);
     
-    pr_err("Sairam_7: End Teardown the Char device\n");
+    pr_err("Sairam_9: End Teardown the Char device\n");
 }
 
 

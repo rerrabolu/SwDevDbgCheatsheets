@@ -7,6 +7,7 @@
 #include <linux/init.h>
 
 #include "ram_fops_core.h"
+#include "ram_dev_ioctl_impl.h"
 
 // File operations structure
 const struct file_operations fops = {
@@ -15,7 +16,7 @@ const struct file_operations fops = {
     .read = dev_read,
     .write = dev_write,
     .release = dev_release,
+    .unlocked_ioctl = ram_dev_ioctl,
 };
-
 
 

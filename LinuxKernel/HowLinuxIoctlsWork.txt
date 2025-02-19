@@ -1,0 +1,214 @@
+
+A brief explanation of how one should go about defining
+IOCTLs for a device. An IOCTL is accessed via the member
+field "unlocked_ioctl" of the struct file_operations. This
+assumes you are running on a 64-bit system.
+
+The member field "compat_ioctl" should be used when running
+things on a 32-bit machine. The function signature of both
+unlocked_ioctl and compat_ioctl is same.
+
+High_Level_Design:
+
+1.  Extend the struct file_operations so that its member field
+    unlocked_ioctl is defined to point to a function in the
+    driver object. An example is given below:
+
+        // A driver method to access various IOCTLs that are
+        // supported by the device
+        long ram_dev_ioctl(struct file *filep,
+                           unsigned int cmd, unsigned long arg);
+
+        // File operations structure
+        const struct file_operations fops = {
+            .owner = THIS_MODULE,
+            .open = ram_dev_open,
+            .release = ram_dev_release,
+            .unlocked_ioctl = ram_dev_ioctl,
+        };
+
+2.  Define a header file to define the various IOCTLs that a
+    user space application can access. It is important to note
+    that definining IOCTLs and mapping them to an ID is highly
+    linked to Linux kernel infrastructure. The following is a
+    list of entities that must be defined.
+        
+        /**
+         * Header file to reference various IOCTLs
+         * For purposes of illustration this file will
+         *  be called "ram_dev_ioctls.h" and will be
+         * located in the .../include/uapi/linux folder
+         * of the Linux kernel tree. Any data structures,
+         * enums, macros, etc that are referenced by this
+         * header file must also be located in this folder.
+         * For example, to keep the definition of the various
+         * data types used by the IOCTLs separate, they are
+         * located in header file "ram_dev_ioctl_args.h"
+         */
+
+            #include <linux/ioctl.h>
+
+            // For file_operations structure
+            #include <linux/fs.h>
+
+            // For copy_to_user, copy_from_user
+            #include <linux/uaccess.h>
+
+            // Defines the various data types that
+            // are used by various IOCTLs
+            #include "ram_dev_ioctl_args.h"
+
+            // BASE ID that is used to compute the ID of an IOCTL
+            #define RAM_DEV_CMD_BASE     'S'
+
+            //
+            // Define IOCTL command codes (cmd). The linux macros
+            // _IOR/_IOW/_IOWR take their input and generate out
+            // of it a number that can then be used by the user
+            // space application to communicate with the driver
+            // object. In contrast the macro _IOC_NR allows driver
+            // object to retrieve the IOCTL command relative to
+            // the BASE that is used to build the command Id.
+            // For purposes of future extendability the third
+            // parameter is defined to be a struct, even if it
+            // simply an integer or some primitive type of this
+            // kind
+            //
+            //  The standard macro defines the three arguments as:
+            //      _IOWR(type, nr, data_type)
+            //
+            //  Assumes the various structs are defined in another file
+            //
+            #define RAM_DEV_CMD_1   _IOR(RAM_DEV_CMD_BASE, 1, struct ram_dev_cmd_1_args)
+            #define RAM_DEV_CMD_2   _IOW(RAM_DEV_CMD_BASE, 2, struct ram_dev_cmd_2_args)
+            #define RAM_DEV_CMD_3   _IOWR(RAM_DEV_CMD_BASE, 3, struct ram_dev_cmd_3_args)
+            #define RAM_DEV_CMD_4   _IOWR(RAM_DEV_CMD_BASE, 4, struct ram_dev_cmd_3_args)
+            
+            // Define the start and stop Ids that can
+            // be used to determine if user calls to
+            // IOCTLs are valid
+            #define RAM_DEV_START_ID    0
+            #define RAM_DEV_STOP_ID     5
+
+        
+
+3.  Define the method ram_dev_ioctl() in a file in such a way that
+    this method simply handles the most common tasks shared by all
+    IOCTL commands and dispatches IOCTL specific implementation to
+    corresponding methods. This implementation file must include
+    the various header files that are defined to be located in the
+    .../include/uapi/linux folder
+
+
+        #include <uapi/linux/ram_dev_ioctl_args.h>
+        #include <uapi/linux/ram_dev_ioctl.h>
+
+        typedef int ram_dev_ioctl_t(struct file *filep,
+                                struct ram_dev_process *proc, void *data);
+
+        // Struct to encapsulate info about an ioctl
+        struct ram_dev_ioctl_desc {
+            unsigned int cmd;
+            int flags;
+            ram_dev_ioctl_t *func;
+            const char *name;
+        };
+
+        // Defines a ioctl descriptor object. The macro retrieves
+        // from user facing IOCTL Id, the ID given by driver object
+        // and populates an instance of IOCTL descriptor at the
+        // index given by driver object
+        #define RAM_DEV_IOCTL_DEF(ioctl, _func, _flags) \
+	            [_IOC_NR(ioctl)] = { .cmd = ioctl,      \
+                                    .func = _func,      \
+                                    .flags = _flags,    \
+                                    .name = #ioctl }
+
+        // Build a list of ioctl descriptor using the struct
+        // that is defined to encapsulate ioctl info 
+        const struct ram_dev_ioctl_desc ram_dev_ioctl_list[] = {
+
+            RAM_DEV_IOCTL_DEF(RAM_DEV_CMD_1,
+                    ram_dev_ioctl_get_profile, 0),
+
+            RAM_DEV_IOCTL_DEF(RAM_DEV_CMD_2,
+                    ram_dev_ioctl_set_profile, 0),
+
+                |
+                |
+                |
+
+            RAM_DEV_IOCTL_DEF(RAM_DEV_CMD_3,
+                    ram_dev_ioctl_alloc_memory, 0),
+
+            RAM_DEV_IOCTL_DEF(RAM_DEV_CMD_4,
+                    ram_dev_ioctl_free_memory, 0),
+        };
+
+
+    
+        long ram_dev_ioctl(struct file *filep,
+                           unsigned int cmd, unsigned long arg) {
+
+            // Get the ID of the IOCTL relative to
+            // the BASE ID used in its defintion
+            u32 ioctl_id = _IOC_NR(cmd);
+
+            // Validate input command is valid i.e. there is a registered
+            // IOCTL  handler for the input ioctl_id. This is the same value
+            // that user has assigned as the second parameter for the macro
+            // _IOR/_IOW/_IOWR. In the example code give here it is either
+            // ZERO or ONE or TWO
+            if !(ioctl_id > RAM_DEV_START_ID) !(ioctl_id < RAM_DEV_STOP_ID) {
+                print a debug/error message
+                return -EINVAL;
+            }
+
+            // Retrieve any private information that the driver object has
+            // embedded into the "void *private_data" member field of the
+            // input  parameter "filep". This is generally done when the
+            // device is opened during the call to open. This will allow
+            // driver object keep process specific information and use
+            // that in responding to various IOCTL calls
+            void *process = filep->private_data;
+            
+            // One can use a switch statement to jump to the registered
+            // handler based on ioctl_id obtaine above. However, this
+            // is not safe as one can always pass an incorrect argument
+            // as ioclt argument. For example, an ioctl might require
+            // struct XXX while the actual argument might be an instance
+            // of struct YYY which will lead to access error. Therefore
+            // one must the ioctl argument that is passed in as well.
+            //
+            // This is best illustrated by maintaining a descriptor for
+            // the various ioctls as given by symbol ram_dev_ioctl_list
+            
+            // Get the handle of ioctl descriptor
+            ram_dev_ioctl_t *desc;
+            desc = &ram_dev_ioctl_list[ioctl_id];
+            
+            // Get the size of this ioctl's args parameter
+            // as given by user and defined by driver object
+            u32 usr_arg_size = _IOC_SIZE(cmd);
+            u32 drv_arg_size = _IOC_SIZE(desc->cmd);
+
+            // The two should match, else it is
+            // an error condition
+            if (usr_arg_size != drv_arg_size)
+                print a debug/error message
+                return -EINVAL;
+
+            // At this point it is reasonable to consider
+            // the IOCTL call as being valid. So copy the
+            // arguments of the IOCTL and call its handler
+            copy_from_user(argData, args);
+            func(filep, process, argData);
+        }
+
+
+
+
+
+
+
+

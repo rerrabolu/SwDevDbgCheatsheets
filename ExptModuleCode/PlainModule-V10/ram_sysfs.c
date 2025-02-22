@@ -356,8 +356,14 @@ static struct kobj_attribute file_z_attr = __ATTR(file_z, 0664, file_z_show, fil
 int ram_sysfs_free_dir_1(void)
 {
     sysfs_remove_file(ram_sysfs_dir_1, &file_a_attr.attr);
+    pr_err("Sairam 10: %s Tearing down file_a from directory dir_1\n", __func__);
+
     sysfs_remove_file(ram_sysfs_dir_1, &file_b_attr.attr);
+    pr_err("Sairam 10: %s Tearing down file_b from directory dir_1\n", __func__);
+    
     sysfs_remove_file(ram_sysfs_dir_1, &file_c_attr.attr);
+    pr_err("Sairam 10: %s Tearing down file_c from directory dir_1\n", __func__);
+    
     return 0;
 }
 
@@ -391,8 +397,14 @@ error_b:
 int ram_sysfs_free_dir_2(void)
 {
     sysfs_remove_file(ram_sysfs_dir_2, &file_i_attr.attr);
+    pr_err("Sairam 10: %s Tearing down file_i from directory dir_2\n", __func__);
+    
     sysfs_remove_file(ram_sysfs_dir_2, &file_j_attr.attr);
+    pr_err("Sairam 10: %s Tearing down file_j from directory dir_2\n", __func__);
+
     sysfs_remove_file(ram_sysfs_dir_2, &file_k_attr.attr);
+    pr_err("Sairam 10: %s Tearing down file_k from directory dir_2\n", __func__);
+
     return 0;
 }
 
@@ -426,8 +438,14 @@ error_j:
 int ram_sysfs_free_dir_3(void)
 {
     sysfs_remove_file(ram_sysfs_dir_3, &file_x_attr.attr);
+    pr_err("Sairam 10: %s Tearing down file_x from directory dir_3\n", __func__);
+    
     sysfs_remove_file(ram_sysfs_dir_3, &file_y_attr.attr);
+    pr_err("Sairam 10: %s Tearing down file_y from directory dir_3\n", __func__);
+    
     sysfs_remove_file(ram_sysfs_dir_3, &file_z_attr.attr);
+    pr_err("Sairam 10: %s Tearing down file_z from directory dir_3\n", __func__);
+    
     return 0;
 }
 
@@ -523,12 +541,15 @@ void ram_sysfs_exit(void)
 {
     ram_sysfs_free_dir_3();
     kobject_put(ram_sysfs_dir_3);
+    pr_err("Sairam 10: %s Tearing down directory dir_3\n", __func__);
 
     ram_sysfs_free_dir_2();
     kobject_put(ram_sysfs_dir_2);
+    pr_err("Sairam 10: %s Tearing down directory dir_2\n", __func__);
     
     ram_sysfs_free_dir_1();
     kobject_put(ram_sysfs_dir_1);
+    pr_err("Sairam 10: %s Tearing down directory dir_1\n", __func__);
     
     kobject_put(ram_sysfs_root);
 }

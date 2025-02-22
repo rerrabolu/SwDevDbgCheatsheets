@@ -1,5 +1,6 @@
 obj-m += re_module_9.o
-re_module_9-objs := ram_module_9.o ram_fops.o ram_fops_struct.o ram_fops_core.o ram_fops_impl.o ram_dev_ioctl_impl.o
+re_module_9-objs := ram_module_9.o ram_fops.o ram_fops_struct.o
+re_module_9-objs += ram_fops_core.o ram_fops_impl.o ram_dev_ioctl_impl.o
 
 KDIR := /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)

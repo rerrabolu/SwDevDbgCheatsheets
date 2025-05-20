@@ -34,11 +34,11 @@ Setting up Neovim:
 
 	2. Populate it with values you like. These include let & set directives
 			@note: Consult init.vim files shared by folks on internet
-			e.g. User NeuralNine @ https://www.youtube.com/watch?v=JWReY93Vl6g
+			e.g. User NeuralNine @ https://www.youtube.com/watch?v=JWReY93Vl6g
 
 	3. Install a plugin manager
 			Update init.nvim to use various plugins
 			@note: Consult notes shared by folks on internet
-			e.g. User NeuralNine @ https://www.youtube.com/watch?v=JWReY93Vl6g
+			e.g. User NeuralNine @ https://www.youtube.com/watch?v=JWReY93Vl6g
 
 

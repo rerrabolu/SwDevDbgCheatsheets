@@ -5,7 +5,7 @@ set nocompatible
 let mapleader= ","
 let g:map_leader = ","
 set number                " Show numbers on the left
-set relativenumber        " Its better if you use motions like 10j or 5yk
+"set relativenumber        " Its better if you use motions like 10j or 5yk
 set hlsearch              " Highlight search results
 set ignorecase            " Search ignoring case
 set smartcase             " Do not ignore case if the search patter has uppercase

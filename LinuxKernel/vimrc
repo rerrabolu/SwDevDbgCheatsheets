@@ -56,8 +56,8 @@ set foldlevel=3
 set foldcolumn=4
 
 
-set directory=/home/amd/Ramesh/vimWorkDir/swaps/      "Location of swap files"
-set backupdir=/home/amd/Ramesh/vimWorkDir/backups/    "Location of backups"
+set directory=/home/ramesh/vimWorkDir/swaps/      "Location of swap files"
+set backupdir=/home/ramesh/vimWorkDir/backups/    "Location of backups"
 
 "
 " Disable BELL on ESC keyboard button
@@ -71,6 +71,6 @@ set noeb vb t_vb=
 "
 " Set the default directory for vim to write files
 "
-:cd /home/amd/Ramesh/vimWorkDir
+:cd /home/ramesh/vimWorkDir
 
 

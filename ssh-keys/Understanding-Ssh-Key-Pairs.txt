@@ -1,0 +1,98 @@
+High-Level Overview Of Ssh Keys:
+
+Using ssh key pairs one can access systems in a manner that is
+convenient in many scenarios. The most common scenario is user
+U1 on a machine M1 wants to login into another machine M2 so as
+to access resources on that machine M2.
+
+@note 1: It is not required for user U1 to have an account on
+machine M2. Furthermore, it is allowed for the resoures on M2
+to belong to yet another user U2. The most important thing that
+is necessary is absolute trust between U1 and U2 so that when
+access is given by U2 to U1 the access is indistinguishable
+from that of U2.
+
+@note 2: A nuance to highlight. In the above scheme, user U1 is
+able to login or access remote resource without having to provide
+any credentials. The same is not true for user U2 if they are trying
+to access the resources on M2 from yet another machine M3. This user
+U2 must provide a different ssh key to remote machine M2 to allow them
+to access the resources in a manner similar to user U1 from M1.
+
+For purposes of illustartion we will label every element clearly
+so that we can follow the chain of ownership / authority
+
+Objects / Actors:
+User U1
+User U2
+Machine M1
+Machine M2
+Machine M3
+Resources R1, R2, etc on M2 are owned by user U2
+
+   
+Setup Phase:
+
+1. On M1, user U1 generates ssh key pair
+   e.g. ssh-keygen -t rsa -b 4096 -C "swami@example.com"   
+   @note: Creates private and public keys
+       Private key: ~/.ssh/id_rsa (kept secret)
+       Public key: ~/.ssh/id_rsa.pub (safe to share)   
+
+2. User U1 copies public key to user U2 on M2
+	How this is done is out-of-band
+   	e.g. ssh-copy-id swami@M2.com   
+   @note: Alternatively copy the public key to system
+   M2 and append it to the file ~/.ssh/authorized_keys
+   
+3. On M1, user U1 adds private key to ssh daemon ssh-agent   
+   e.g. eval "$(ssh-agent -s)"
+        ssh-add ~/.ssh/id_rsa
+
+4.	Verifyou your private key is in the list valid keys
+
+	@note: If the step to add private key to ssh-agent is
+	missed you will have trouble.
+	
+	One can verify this by running the following commands
+	
+		ssh-add -l which will dump the list of valid keys
+		@note: Check the private key you need is the list
+	
+		ssh -T git@github.com which wirll print the user
+			who is bound to the url
+			
+		@note: The above command is help to debug access to
+		repos. The name in the output should match the string
+		used to identify the account on the github repository
+
+
+Connection Phase:
+
+1. Ssh Client Initiates Connection
+   e.g. ssh u2@M2.com
+
+2. Server Responds With Supported Authentication Methods
+
+3. Client Offers Public Key
+
+4. Server Checks authorized_keys
+
+   Continue if server finds clients public key in its
+       list of authorized keys, else return error
+   Generate a challenge (random string) and encrypts
+       it using the public key
+   Send the encrypted challenge to client
+
+5. Client proves it has the private key
+
+   Decrypts the encrypted challenge using its private key
+   Client sends the decrypted challenge to server
+
+6. Server verifies the response and sets up connection
+
+Using the above principles I am able to clone repos from both
+public (github.com) and private repositories (github.xyz.com)
+and update them and submit back the updates
+
+

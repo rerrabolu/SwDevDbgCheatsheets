@@ -1,0 +1,84 @@
+Configuration elements (CE<n>) related to a PCIe device can be
+conceptualized as belonging to two blocks:
+
+	Block 1 — Hardware Configuration Elements (HCEs): 
+		Reside in the device’s PCI configuration space and are
+		defined by the PCIe specification.
+
+	Block 2 — Driver Configuration Elements (DCEs): 
+		Represent driver-defined tunables, features, or runtime
+		parameters, typically surfaced via sysfs or managed internally
+		within the driver.
+
+Lifecycle of Hardware Configuration Elements (HCEs)
+
+	The state of a PCIe device’s HCEs evolves through several stages:
+
+	Initialization:
+		Initially set by the platform firmware (BIOS/UEFI) during early
+		system boot.
+
+	Device Firmware Overrides:
+		May be modified by firmware resident on the device itself — commonly
+		embedded in a ROM accessible via the Expansion ROM BAR. This device
+		local firmware is executed by the platform firmware and may configure
+		standard or vendor-specific registers within the PCIe configuration space.
+
+	Kernel Overrides:
+		Updated by the Linux kernel during PCIe enumeration. This phase may
+		override or reprogram configuration space fields to ensure correct
+		operation, allocate resources, enable features like bus mastering
+		or disable unwanted capabilities.
+
+	Userspace Overrides:
+		Additional modifications may be triggered by udev rules, which can
+		invoke helper tools (e.g., setpci) to modify specific configuration
+		registers exposed through HCEs.
+
+	After kernel enumeration, it is common to find files under sysfs that
+	expose one or more HCEs for userspace access. These files are surfaced
+	by the PCI subsystem during device discovery. Importantly, these files
+	are informationally equivalent to the PCI configuration space — they
+	mirror the hardware state and do not represent new or independent values.
+
+Lifecycle of Driver Configuration Elements (DCEs)
+
+	Driver Configuration Elements (DCEs) are software defined values associated
+	with the device driver rather than the hardware. Unlike HCEs, which reside
+	in PCI config space, DCEs are maintained within the driver’s internal
+	structures and may reflect tunable parameters, operational modes, performance
+	thresholds, or runtime control points. These are commonly exposed via sysfs,
+	debugfs, procfs, or module_param interfaces, enabling interaction with
+	userspace tools without requiring direct hardware manipulation.
+
+	DCEs are initialized and updated in the following phases:
+
+	Initialization:
+		DCEs with simple initial values (e.g., int foo = 42;) are initialized at
+		module load time, before module_init() is invoked. DCEs requiring code
+		execution (e.g., to compute a value dynamically) must be initialized after
+		the call to module_init(), either within that function or from routines
+		invoked thereafter.
+
+	Driver Overrides (Phase 1):
+		During module loading, drivers may override default DCE values using module
+		parameters passed via modprobe or the kernel command line. In some cases,
+		drivers may also modify associated HCEs (via pci_write_config_*()) to ensure
+		that hardware state and its sysfs representation remain in sync.
+
+		@note: Like the PCI subsystem, drivers often create sysfs files that expose
+		values from both HCE and DCE blocks.
+
+	Userspace Overrides (Phase 1):
+		Additional updates may be performed via udev rules that match the device
+		and execute helper scripts or utilities such as setpci, ethtool, or driver
+		specific commands. These may modify values in either HCE or DCE blocks
+		depending on implementation.
+
+	Userspace Overrides (Phase 2):
+		After driver binding, userspace can write directly to sysfs files created
+		by the driver. These files offer fine-grained control over DCEs and, where
+		supported, may also update associated HCEs via driver-controlled logic.
+
+
+

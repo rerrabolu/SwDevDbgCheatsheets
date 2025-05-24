@@ -80,5 +80,29 @@ Lifecycle of Driver Configuration Elements (DCEs)
 		by the driver. These files offer fine-grained control over DCEs and, where
 		supported, may also update associated HCEs via driver-controlled logic.
 
+The above seems to suggest limited configuration opportunity which is very far
+from the actual way system are deployed in real world. The procedures users
+follow in configuring systems engage heavily services from the userspace.
+
+Following is a brief description of these:
+    udev - userspace device manager
+    systemd - system and service manager
+    Module Management Tools e.g., ethtool, nvme-cli, etc
+
+For example it is possible for udev to subscribe to events such as
+device detection and enumeration. So upon device enumeration, one
+can trigger execution of a tool or a script to configure the device
+appropriately.
+
+In a similar manner one can engage a module specific management tool
+to configure a specific device. Depending upon implementation, it
+could subscribe to events or use other mechanisms to execute user
+specified configuration bindings.
+
+In fact much of the configuration of devices on various systems is
+accomplished through this userspace services / mechanisms.
+
+
+
 
 

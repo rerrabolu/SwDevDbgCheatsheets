@@ -1,10 +1,14 @@
 
+
 ## Clear the screen
-#alias cls=clear
+alias cls=clear
 
 ## Alias for file listing
-#alias ls='ls -alF'
+alias ls='ls -alF'
 
+# Check if ssh keys are active
+alias keyList='ssh-add -l'
+alias loadSshKeys='source ${HOME}/Scripts/CoreUtils/loadSshKeys.bash  '
 
 # How to go from one tab to another
 #alias vimListTag="echo g+]"
@@ -16,43 +20,37 @@
 #alias vimLoadCscope="echo In Vim \:cs add \"path of Cscope DB file"
 
 ## Clear whitespace from file in place
-#alias clearSpace="sed -i 's/[[:space:]]*$//'"
+alias clearSpace="sed -i 's/[[:space:]]*$//'"
 
 ## Alias for building single vs multi threaded
-#alias bldSt='export DASH_JAY="-j 1"'
-#alias bldMt='export DASH_JAY="-j 4"'
+alias bldSt='export DASH_JAY="-j 1"'
+alias bldMt='export DASH_JAY="-j 4"'
 
 ## List contents of a debian pkg
-#alias listDebPkg='dpkg-deb -c'
-#alias extractDebPkg='mkdir Tmp; dpkg -e'
-#function extractDebPkg() {
-#  echo " " >&2;
-#  echo 'Usage: extractDebPkg <pkgName> <dirName>' # > /dev/stderr;
-#  mkdir $2;
-#  dpkg -e $1 $2;
-#  echo " " >&2;
-#}
+alias listDebPkg='dpkg-deb -c'
+alias extractDebPkg='${HOME}/Scripts/CoreUtils/extractDebPkg.bash  '
 
 # Commands related to debian packages
-#alias listDebPkg='dpkg-deb -c'
-#alias purgeDebPkg='sudo dpkg --purge'
-#alias removeDebPkg='sudo dpkg --remove'
+alias listDebPkg='dpkg-deb -c'
+alias purgeDebPkg='sudo dpkg --purge'
+alias removeDebPkg='sudo dpkg --remove'
 
 ## Show files of a git changelist
-#alias listBrnch='git branch'
-#alias getBrnch='git branch --contains'
-#alias currBrnch='git branch | grep "*"'
-#alias setMasterBrnch='git checkout master'
-#alias showList='git show --pretty="" --name-only'
-#alias disableGitDiff='git config --global --unset diff.external'
-#alias enableGitDiff='git config --global --add diff.external ~/Scripts/extDiff.bash'
-#alias runClang='git diff -U0 HEAD^ | ~/Scripts/clang-format-diff.py -p1 -i -style=file'
+alias listBrnch='git branch'
+alias getBrnch='git branch --contains'
+alias currBrnch='git branch | grep "*"'
+alias setMasterBrnch='git checkout master'
+alias showList='git show --pretty="" --name-only'
+alias disableGitDiff='git config --global --unset diff.external'
+alias enableGitDiff='git config --global --add diff.external ~/Scripts/extDiff.bash'
+alias runClang='git diff -U0 HEAD^ | ~/Scripts/clang-format-diff.py -p1 -i -style=file'
 
 ## Command to download a file from a URL, replace userid with actual value
-#alias getbld='wget --user=<userId> --ask-password '
+# alias getbld='wget --user=<userId> --ask-password '
+alias getbld='wget --user=foobar --ask-password '
 
 ## Alias for grepping only source files
-#alias myGrep='grep -R --exclude-dir='.git' --include='\''*.h'\'' --include='\''*.c'\'' --include='\''*.hpp'\'' --include='\''*.cpp'\'''
+alias myGrep='grep -R --exclude-dir='.git' --include='\''*.h'\'' --include='\''*.c'\'' --include='\''*.hpp'\'' --include='\''*.cpp'\'''
 
 ## Mount Remote directories
 # alias mntRemote='sudo sshfs -o allow_other <userId>@<machineId>:<remote-dir-path> <local-dir-path>'
@@ -64,33 +62,33 @@
 #
 # Enable / Disable setting of gerrit change id as part of commit message
 #
-#alias onChangeId='git config --add gerrit.createChangeId true'
-#alias offChangeId='git config --add gerrit.createChangeId false'
-#alias getChangeId='echo `git config --get gerrit.createChangeId`'
-#alias pushCmd='echo git push gerritgit HEAD:refs/heads/<userId>/<branchName>'
+alias onChangeId='git config --add gerrit.createChangeId true'
+alias offChangeId='git config --add gerrit.createChangeId false'
+alias getChangeId='echo `git config --get gerrit.createChangeId`'
+alias pushCmd='echo git push gerritgit HEAD:refs/heads/<userId>/<branchName>'
 
 
 # Print the Configs used to build Linux kernel
-#alias lnxConfig='cat /boot/config-$(uname -r)'
+alias lnxConfig='cat /boot/config-$(uname -r)'
 #alias intel='lnxConfig | grep -i config_intel_iommu'
 
 # Alias to list/enable/disable function tracing capabilities
-#alias lnxCurrTracer='sudo cat /sys/kernel/debug/tracing/current_tracer'
-#alias lnxListTracers='sudo cat /sys/kernel/debug/tracing/available_tracers'
+alias lnxCurrTracer='sudo cat /sys/kernel/debug/tracing/current_tracer'
+alias lnxListTracers='sudo cat /sys/kernel/debug/tracing/available_tracers'
 
-#alias lnxResetTrace='sudo echo nop > /sys/kernel/debug/tracing/current_tracer'
-#alias lnxTraceFunc='sudo echo function > /sys/kernel/debug/tracing/current_tracer'
-#alias lnxTraceFuncGraph='sudo echo function_graph > /sys/kernel/debug/tracing/current_tracer'
-#alias lnxDumpTrace='sudo cat /sys/kernel/debug/tracing/trace'
+alias lnxResetTrace='sudo echo nop > /sys/kernel/debug/tracing/current_tracer'
+alias lnxTraceFunc='sudo echo function > /sys/kernel/debug/tracing/current_tracer'
+alias lnxTraceFuncGraph='sudo echo function_graph > /sys/kernel/debug/tracing/current_tracer'
+alias lnxDumpTrace='sudo cat /sys/kernel/debug/tracing/trace'
 
-#alias lnxIsTracingOn='sudo cat /sys/kernel/debug/tracing/tracing_on'
-#alias lnxEnableTrace='sudo echo 1 > /sys/kernel/debug/tracing/tracing_on'
-#alias lnxDisableTrace='sudo echo 0 > /sys/kernel/debug/tracing/tracing_on'
+alias lnxIsTracingOn='sudo cat /sys/kernel/debug/tracing/tracing_on'
+alias lnxEnableTrace='sudo echo 1 > /sys/kernel/debug/tracing/tracing_on'
+alias lnxDisableTrace='sudo echo 0 > /sys/kernel/debug/tracing/tracing_on'
 
-#alias lnxIsStackTraceOn='sudo cat /proc/sys/kernel/stack_tracer_enabled'
-#alias lnxDumpStackTrace='sudo cat /sys/kernel/debug/tracing/stack_trace'
-#alias lnxEnableStackTrace='sudo echo 1 > /proc/sys/kernel/stack_tracer_enabled'
-#alias lnxDisableStackTrace='sudo echo 0 > /proc/sys/kernel/stack_tracer_enabled'
+alias lnxIsStackTraceOn='sudo cat /proc/sys/kernel/stack_tracer_enabled'
+alias lnxDumpStackTrace='sudo cat /sys/kernel/debug/tracing/stack_trace'
+alias lnxEnableStackTrace='sudo echo 1 > /proc/sys/kernel/stack_tracer_enabled'
+alias lnxDisableStackTrace='sudo echo 0 > /proc/sys/kernel/stack_tracer_enabled'
 
 # Aliases to enable/disable print statements in kernel
 #alias enableAmdgpuPrints="sudo echo 'module amdgpu +flpt' > /sys/kernel/debug/dynamic_debug/control"
@@ -100,11 +98,32 @@
 #alias gdb='gdb -tui '
 
 # Alias to reboot gracefully
-#alias myReboot='sudo shutdown -r now'
+alias myReboot='sudo shutdown -r now'
 
 # Alias Flush DNS Cache of the system
 #alias flushDns=`systemd-resolve - -flush-caches`
-#alias flushDns='sudo systemd-resolve --flush-caches'
+alias flushDns='sudo systemd-resolve --flush-caches'
 
+
+# Search for a command in your history
+alias hSrch='history | grep '
+
+#
+# Please pass the port number to use in enabling download
+#
+alias enableDownload='source ${HOME}/Scripts/CoreUtils/enableDownload.bash 1080 lnxgwne1.boeblingen.de.ibm.com '
+
+#
+# Aliases to navigate PCI Sysfs
+#
+alias pciRoot='cd /sys/bus/pci '
+alias pciSlots='cd /sys/bus/pci/slots '
+alias pciDevs='cd /sys/bus/pci/devices '
+alias pciDrvrs='cd /sys/bus/pci/drivers '
+
+alias lsPciRoot='ls /sys/bus/pci '
+alias lsPciSlots='ls /sys/bus/pci/slots '
+alias lsPciDevs='ls /sys/bus/pci/devices '
+alias lsPciDrvrs='ls /sys/bus/pci/drivers '
 
 

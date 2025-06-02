@@ -1,25 +1,45 @@
 
-[color]
-  ui = auto
-
+#
+# Attributes of user to apply/consult
+#
 [user]
     name = "fname lname"
     email = <mail-id e.g fname.lname@orgid.org>
 
+#
+# Attributes that are considered core by git
+#
 [core]
-    excludesfile = ~/.gitignore
+	editor = gvim
+	autocrlf = input
+	excludesfile = ~/.gitignore
 
 [push]
-    default = simple
+	default = simple
 
-[url "ssh://<remote-server-id/"]
-    pushInsteadOf = ssh://<remote-server>/
+[pull]
+	rebase = true
 
-[review "<review machine id and port"]
-  username = <userId>
-  uploadtopic = true
+[color]
+	ui = auto
 
-# Launch an external tool to show diff
 [diff]
-	external = ~/Scripts/extDiff.bash
+	tool = meld
+[difftool]
+	prompt = false
+
+# 
+# Aliases one can use for various git commands
+# git st is equivalent to calling git status
+#
+[alias]
+	df = diff
+	st = status
+	br = branch
+	ci = commit
+	co = checkout
+	gdiff = difftool
+	ldiff = diff --name-only
+	lg = log --graph --oneline --decorate --all
+
 

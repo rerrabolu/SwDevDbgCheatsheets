@@ -1,0 +1,73 @@
+Let me describe the workflow
+
+At T1:
+    There exists a repo R
+    The main branch of R is called "master"
+    User makes a fork of it called F
+    User clones remote repo R as L
+    Cloning creates tracking branch "master" for "R/master"
+    Rename branch "master" that tracks "R-Master"
+    User adds a link to remote F
+    User creates branch "F-Master" to track "F/master
+
+At T2:
+    User checks out branch F-Master
+    User creates a local branch B
+    User makes changes to branch B in support of a feature
+    At this point branch B is not linked to any remote branch
+
+User follows below strategy to submit his changes
+
+idx = 1
+flag = true
+while (flag) {
+    Phase 1:
+    User checks out F-Master branch of F
+    User rebases it with the R-Master
+    This ensures F-Master of F and R-Master of R same
+    User now switches to branch B
+    User pushes branch B as B1-V<idx> to F
+    User also sends branch B commits for review
+
+    Phase 2:
+    User receives review comments
+    if (no review comments)
+        flag = false
+        User push branch B to R for submission
+    else
+        idx++
+        Application of review comments leads to new commits
+}
+
+
+Commands:
+
+x. Find out name of remote
+    git remote -v
+
+x. Create a tracking branch
+    git fetch Review
+    git checkout -b mybranch origin/mybranch
+    git checkout -b UMaster origin/master
+    git checkout -b RMaster Review/master
+
+x. Rebase a branch X with updates to branch Y
+   Here X and Y can be local or remote branches
+   git checkout UMaster
+   git pull --rebase
+
+x. Sync two remote master branches
+   git checkout UMaster
+   git pull --rebase
+   git checkout RMaster
+   git rebase UMaster
+   git push Review RMaster
+
+x. Add a new remote
+   git remote add <remote-name> <remote-link>
+   git remote add Shankara https://github.com/yourname/myrepo.git  
+
+x. Rename a remote:
+   git remote rename <old-name> <new-name>
+   git remote rename origin Sairam
+
